@@ -54,5 +54,8 @@ Route::group(['middleware' => [ 'language']], function () {
             });
         });
     });
+    Route::get('/cms/{page}', [ContentController::class, 'getPageFromCMS'])->name('cms.page');
+    Route::get('/cms/image/data', [ContentController::class, 'getImageData'])->name('cms.image.data.get');
+    Route::get('/{page}', [ContentController::class, 'getPageFromCMS'])->name('page');
 });
 
