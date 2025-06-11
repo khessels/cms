@@ -29,6 +29,12 @@ class BladeDirectivesServiceProvider extends ServiceProvider
     {
         View::share( 'app_url', config('app.url') );
         View::share( 'language', app()->getLocale() );
+        if (! app()->runningInConsole()) {
+            $pagesCache = Cache::get('pages');
+            if( empty( $pagesCache)){
+                ContentController::_retrievePages();
+            }
+        }
         Blade::directive('money_old', function ( $amount) {
             return "<?php echo '€' . number_format($amount, 2, ',', '.'); ?>";
         });
@@ -51,11 +57,6 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             return "<?php echo khessels\cms\Controllers\ContentController::translate( $expression); ?>";
         });
 //        }
-        if (! app()->runningInConsole()) {
-            $pagesCache = Cache::get('pages');
-            if( empty( $pagesCache)){
-                ContentController::_retrievePages();
-            }
-        }
+
     }
 }
