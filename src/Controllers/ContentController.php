@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Routing\Controller;
 
-use khessels\ContentManagement\Controllers\Controller as ControllersController;
+use khessels\cms\Controllers\Controller as ControllersController;
 
 class ContentController extends ControllersController
 {

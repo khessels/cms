@@ -1,6 +1,6 @@
 <?php
 
-namespace Khessels\cms\Providers;
+namespace Khessels\Cms\Providers;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Number;
+use khessels\cms\Controllers\ContentController;
 
 class BladeDirectivesServiceProvider extends ServiceProvider
 {
@@ -44,9 +45,17 @@ class BladeDirectivesServiceProvider extends ServiceProvider
         Blade::directive('round', function ( $amount, $precision = 1) {
             return "<?php echo round( $amount, $precision); ?>";
         });
-
+        // $rey = app()->runningInConsole();
+//        if (! app()->runningInConsole()) {
         Blade::directive('c', function ( string $expression) {
-            return "<?php echo khessels\ContentManagement\Controllers\ContentController::translate( $expression); ?>";
+            return "<?php echo khessels\cms\Controllers\ContentController::translate( $expression); ?>";
         });
+//        }
+        if (! app()->runningInConsole()) {
+            $pagesCache = Cache::get('pages');
+            if( empty( $pagesCache)){
+                ContentController::_retrievePages();
+            }
+        }
     }
 }

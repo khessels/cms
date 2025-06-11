@@ -4,7 +4,7 @@ namespace Khessels\Cms\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
-use khessels\ContentManagement\Middleware\Language;
+use khessels\cms\Middleware\Language;
 
 class ContentManagementServiceProvider extends ServiceProvider
 {
