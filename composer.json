@@ -1,0 +1,38 @@
+{
+    "name": "khessels/cms",
+    "version":"1.0.0",
+    "description": "Integrate your laravel project with kcs-content-manager",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Khessels\\Cms\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "khessels",
+            "email": "kees.hessels@gmail.com",
+            "homepage": "https://khessels.com/"
+        }
+    ],
+
+    "minimum-stability": "dev",
+        "require": {
+        "php": "^8.4",
+        "illuminate/support": "^12.17"
+    },
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "optimize-autoloader": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Khessels\\Cms\\Providers\\ContentManagementServiceProvider",
+                "Khessels\\Cms\\Providers\\BladeDirectivesServiceProvider"
+            ]
+        }
+    }
+}
