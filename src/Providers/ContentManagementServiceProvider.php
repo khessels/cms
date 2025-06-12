@@ -5,16 +5,29 @@ namespace khessels\cms\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
 use khessels\cms\Middleware\Language;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Contracts\Http\Kernel;
 
 class ContentManagementServiceProvider extends ServiceProvider
 {
-    public function boot( Router $router)
+    public function boot( Router $router, Kernel $kernel)
     {
         // Optional: Register routes, views, etc.
-        $router->aliasMiddleware('language', Language::class);
 
+
+        //$router->aliasMiddleware('language', Language::class);
+        //$router->pushMiddlewareToGroup('web', Language::class);
+        // Register the middleware
+        $kernel->pushMiddleware( Language::class);
+        $kernel->appendMiddlewareToGroup('web', Language::class);
         // Load routes
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
+        // $router->routes( function () {
+        //     Route::middleware( [ Language::class]) // Replace 'your-middleware' with the desired middleware
+        //     ->group(function () {
+        //        $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
+        //     });
+        // });
 
         // Load views
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'package-views');

@@ -75,7 +75,7 @@ class Language
         $cms = empty( session('cms.enable')) ? false : true;
         view()->share('cms', $cms);
 
-        $isNewSession = request()->cookie(session()->getName()) === null;
+        $isNewSession = request()->cookie( session()->getName()) === null;
         if( $isNewSession ) {
             if( empty( Session::get('language'))) {
                 $lang = $this->preferredLanguage( config('cms.available_locales'), $_SERVER['HTTP_ACCEPT_LANGUAGE']);

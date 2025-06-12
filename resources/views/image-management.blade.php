@@ -85,7 +85,7 @@
                                         <input type="hidden" name="directory" value="{{ $directory }}">
                                         @csrf
                                         <select name="language" id="language" class="form-select" onchange="this.form.submit()">
-                                            @foreach( config('app.available_locales') as $locale)
+                                            @foreach( config('cms.available_locales') as $locale)
                                                 @php
                                                     $selected = '';
                                                     if( app()->getLocale() === $locale){
