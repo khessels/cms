@@ -23,7 +23,7 @@
                     <form action="/cms/database" method="post">
                         @csrf
                         <input type="hidden" name="_method" value="delete">
-                        <input type="hidden" name="app" value="{{ config('kcs-content-manager.app')}}">
+                        <input type="hidden" name="app" value="{{ config('cms.app')}}">
                         <input style="width:200px; color: darkred"  type="submit" value="Delete Database">
                     </form>
                 </div>
@@ -225,7 +225,7 @@
 
 @section('footer-js')
     <script>
-        let app = '{{ config('kcs-content-manager.app')}}'
+        let app = '{{ config('cms.app')}}'
         let body = $('body');
 
         let mdlAddPage = new bootstrap.Modal(document.getElementById("mdl_add_page"), {});

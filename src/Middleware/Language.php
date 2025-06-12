@@ -78,7 +78,7 @@ class Language
         $isNewSession = request()->cookie(session()->getName()) === null;
         if( $isNewSession ) {
             if( empty( Session::get('language'))) {
-                $lang = $this->preferredLanguage( config('app.available_locales'), $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+                $lang = $this->preferredLanguage( config('cms.available_locales'), $_SERVER['HTTP_ACCEPT_LANGUAGE']);
                 Session::put('language', $lang);
             }
         }

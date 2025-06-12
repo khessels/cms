@@ -1,7 +1,7 @@
 {
     "name": "khessels/cms",
     "version":"1.0.0",
-    "description": "Integrate your laravel project with kcs-content-manager",
+    "description": "Integrate your laravel project with cms",
     "type": "library",
     "autoload": {
         "psr-4": {

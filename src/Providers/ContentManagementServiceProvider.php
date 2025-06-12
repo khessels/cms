@@ -1,6 +1,6 @@
 <?php
 
-namespace Khessels\Cms\Providers;
+namespace khessels\cms\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
@@ -21,7 +21,7 @@ class ContentManagementServiceProvider extends ServiceProvider
 
         // Publish config
         $this->publishes([
-            __DIR__.'/../../config/config.php' => config_path('kcs-content-manager.php')
+            __DIR__.'/../../config/config.php' => config_path('cms.php')
         ]);
     }
 

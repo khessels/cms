@@ -143,12 +143,12 @@ class ContentController extends ControllersController
     public function db_delete( Request $request ){
         if( $request->has('app')){
             $r = Http::withHeaders([
-                'Authentication' => 'bearer ' . config('kcs-content-manager.token'),
+                'Authentication' => 'bearer ' . config('cms.token'),
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                'x-dev' => config('kcs-content-manager.dev'),
-                'x-app' => config('kcs-content-manager.app')
-            ])->delete(config('kcs-content-manager.domain') . '/api/database');
+                'x-dev' => config('cms.dev'),
+                'x-app' => config('cms.app')
+            ])->delete(config('cms.domain') . '/api/database');
             $this->alertNotification('Database has been deleted !!!', 'warning');
             return redirect()->route('cms.index');
         }
@@ -172,14 +172,14 @@ class ContentController extends ControllersController
                  // the tag['value'] can contain a null value indicating the tag['value'] has not been set.
                  //   In that case use the tag['default'] value
                 $strElement = is_null($all['value']) ? $item['default'] : $all['value'];
-                $url = config('kcs-content-manager.domain') . '/api/tag/direct/' . $app . '/' . $id;
+                $url = config('cms.domain') . '/api/tag/direct/' . $app . '/' . $id;
 
                 $response = Http::withHeaders([
-                    'Authentication' => 'bearer ' . config('kcs-content-manager.token'),
+                    'Authentication' => 'bearer ' . config('cms.token'),
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
-                    'x-dev' => config('kcs-content-manager.dev'),
-                    'x-app' => config('kcs-content-manager.app')
+                    'x-dev' => config('cms.dev'),
+                    'x-app' => config('cms.app')
                 ])->patch(
                     $url,
                     ['value' => $strElement]
@@ -252,13 +252,13 @@ class ContentController extends ControllersController
         $data = Cache::get('cms.collection');
         if( ! empty( $data)){
             $r = Http::withHeaders([
-                'Authentication' => 'bearer ' . config('kcs-content-manager.token'),
+                'Authentication' => 'bearer ' . config('cms.token'),
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                'x-dev' => config('kcs-content-manager.dev'),
-                'x-app' => config('kcs-content-manager.app')
+                'x-dev' => config('cms.dev'),
+                'x-app' => config('cms.app')
             ])
-                ->post(config('kcs-content-manager.domain') . '/api/expressions', ['expressions' => $data]);
+                ->post(config('cms.domain') . '/api/expressions', ['expressions' => $data]);
             Cache::delete('cms.collection');
             // disable content tag collection
             session()->put('cms.collection.enabled', false);
@@ -317,11 +317,11 @@ class ContentController extends ControllersController
         }
 
         $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('kcs-content-manager.token'),
+            'Authentication' => 'bearer ' . config('cms.token'),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'x-app' => config('kcs-content-manager.app')
-        ])->get(config('kcs-content-manager.domain') . '/api/management/content' . $parm);
+            'x-app' => config('cms.app')
+        ])->get(config('cms.domain') . '/api/management/content' . $parm);
         $tags = $response->json();
         $items = [];
         foreach( $tags as $tag ) {
@@ -468,7 +468,7 @@ class ContentController extends ControllersController
                 self::addToCMSCollectionCache( $expression);
             }
             // $val = $val !== null ? $val : ( isset($expression['default']) ? $expression['default'] : $expression['key']);
-            if( ! $wrapped && $mimetype === 'text/html' &&  config('kcs-content-manager.image_management')){
+            if( ! $wrapped && $mimetype === 'text/html' &&  config('cms.image_management')){
                 return self::updateImageElement( $foundContent);
             }
             return  $foundContent;
@@ -513,11 +513,11 @@ class ContentController extends ControllersController
     }
     public static function _retrievePages( ){
         $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('kcs-content-manager.token'),
+            'Authentication' => 'bearer ' . config('cms.token'),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'x-app' => config('kcs-content-manager.app')
-        ])->get(config('kcs-content-manager.domain') . '/api/page/list/ACTIVE');
+            'x-app' => config('cms.app')
+        ])->get(config('cms.domain') . '/api/page/list/ACTIVE');
         $pages = $response->json();
         Cache::set('pages', $pages);
         return redirect('/dashboard');
@@ -525,12 +525,12 @@ class ContentController extends ControllersController
 
     public function deletePage( Request $request, $page ){
         $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('kcs-content-manager.token'),
+            'Authentication' => 'bearer ' . config('cms.token'),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'x-dev' => config('kcs-content-manager.dev'),
-            'x-app' => config('kcs-content-manager.app')
-        ])->delete(config('kcs-content-manager.domain') . '/api/page/' . $page);
+            'x-dev' => config('cms.dev'),
+            'x-app' => config('cms.app')
+        ])->delete(config('cms.domain') . '/api/page/' . $page);
         return redirect('/dashboard');
     }
     public function addPage( Request $request ){
@@ -544,31 +544,31 @@ class ContentController extends ControllersController
             }
         }
         $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('kcs-content-manager.token'),
+            'Authentication' => 'bearer ' . config('cms.token'),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'x-dev' => config('kcs-content-manager.dev'),
-            'x-app' => config('kcs-content-manager.app')
-        ])->post(config('kcs-content-manager.domain') . '/api/page', $all);
+            'x-dev' => config('cms.dev'),
+            'x-app' => config('cms.app')
+        ])->post(config('cms.domain') . '/api/page', $all);
         return redirect('/dashboard');
     }
     public function getPage( Request $request, $page ){
         $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('kcs-content-manager.token'),
+            'Authentication' => 'bearer ' . config('cms.token'),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'x-app' => config('kcs-content-manager.app')
-        ])->post(config('kcs-content-manager.domain') . '/api/page/' . $page);
+            'x-app' => config('cms.app')
+        ])->post(config('cms.domain') . '/api/page/' . $page);
         return 'OK';
     }
     public function setPageActiveState( Request $request, $page, $status = 'ACTIVE' ){
         $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('kcs-content-manager.token'),
+            'Authentication' => 'bearer ' . config('cms.token'),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'x-dev' => config('kcs-content-manager.dev'),
-            'x-app' => config('kcs-content-manager.app')
-        ])->patch(config('kcs-content-manager.domain') . '/api/page/' . $page . '/active/' . $status);
+            'x-dev' => config('cms.dev'),
+            'x-app' => config('cms.app')
+        ])->patch(config('cms.domain') . '/api/page/' . $page . '/active/' . $status);
         return 'OK';
     }
 
