@@ -147,7 +147,9 @@
                                     </td>
                                     <td>
                                         <select name="template" class="form-select">
-                                            <option selected value="gerecht">Gerecht</option>
+                                            @foreach( $template_pages as $template_page)
+                                                <option value="{{ $template_page }}">{{ $template_page }}</option>
+                                            @endforeach
                                         </select>
                                     </td>
                                     <td>

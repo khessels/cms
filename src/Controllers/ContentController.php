@@ -11,8 +11,10 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\File;
 
 use khessels\cms\Controllers\Controller as ControllersController;
+
 
 class ContentController extends ControllersController
 {
@@ -20,8 +22,16 @@ class ContentController extends ControllersController
 
     public function index(Request $request)
     {
-        return view('package-views::index');
+        $directoryPath = resource_path( 'views/templates');
+        $files = File::allFiles( $directoryPath);
+        $templateNames = [];
+        foreach( $files as $file){
+            $fileName = $file->getFilename();
+            $templateNames[] = explode( '.', substr( $fileName, 0, strlen( $directoryPath)))[0];
+        }
+        return view( 'package-views::index')->with( 'template_pages', $templateNames);
     }
+
     public function getImageData( Request $request){
         $data = $request->all();
         $url = $data['file'] . '.' . $data['language'] . ".json";
