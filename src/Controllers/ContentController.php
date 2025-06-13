@@ -20,14 +20,14 @@ class ContentController extends ControllersController
 {
     public $acceptedImageFileExtensions = ["jpeg","jpg", "png", "gif", "webp", "pdf", "svg", "pdf"];
 
-    public function index(Request $request)
+    public function index( Request $request)
     {
         $directoryPath = resource_path( 'views/templates');
         $files = File::allFiles( $directoryPath);
         $templateNames = [];
         foreach( $files as $file){
             $fileName = $file->getFilename();
-            $templateNames[] = explode( '.', substr( $fileName, 0, strlen( $directoryPath)))[0];
+            $templateNames[] = explode( '.', substr( $fileName, 0, strlen( $directoryPath)))[ 0];
         }
         return view( 'package-views::index')->with( 'template_pages', $templateNames);
     }
