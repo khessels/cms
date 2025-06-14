@@ -29,7 +29,34 @@ class ContentController extends ControllersController
             $fileName = $file->getFilename();
             $templateNames[] = explode( '.', substr( $fileName, 0, strlen( $directoryPath)))[ 0];
         }
-        return view( 'package-views::index')->with( 'template_pages', $templateNames);
+
+        $directory = '';
+        if($request->has('directory')){
+            $directory = $request->get('directory');
+        }
+        $directories = Storage::disk('public')->allDirectories();
+        $files = Storage::disk('public')->files( $directory);
+        $arr = [];
+        $data = [];
+        foreach( $files as $file){
+            $extension =  pathinfo($file, PATHINFO_EXTENSION);
+            if( ! in_array($extension, [ 'gitignore'] )){
+                if( in_array( $extension, ['json'])){
+                    $data[ $file] = json_decode( Storage::disk('public')->get( $file));
+                }
+                if( in_array( $extension, $this->acceptedImageFileExtensions ) ){
+                    $arr[] = $file;
+                }
+            }
+        }
+        return view( 'package-views::index')
+            ->with( 'template_pages', $templateNames)
+            ->with( 'page', 'image-management')
+            ->with( 'files', $arr)
+            ->with( 'data', $data)
+            ->with( 'accepted_files', $this->acceptedImageFileExtensions)
+            ->with( 'directories', $directories)
+            ->with( 'directory', $directory);
     }
 
     public function getImageData( Request $request){
