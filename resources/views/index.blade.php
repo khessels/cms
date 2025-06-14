@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="card" >
                             <div class="card-body">
                                 <h5 class="card-title">Collection operations</h5>
@@ -39,7 +39,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="card" >
                             <div class="card-body">
                                 <h5 class="card-title">In-Page content editor</h5>
@@ -48,7 +48,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="card" >
                             <div class="card-body">
                                 <h5 class="card-title" style="color: darkred">*** BE CAREFULL ***</h5>
@@ -61,14 +61,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card" >
-                            <div class="card-body">
-                                <h5 class="card-title">Image management</h5>
-                                <a href="/cms/image/management" target="_blank">Images management</a>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
 
 
