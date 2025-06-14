@@ -18,7 +18,7 @@ class ContentManagementServiceProvider extends ServiceProvider
         //$router->aliasMiddleware('language', Language::class);
         //$router->pushMiddlewareToGroup('web', Language::class);
         // Register the middleware
-        $kernel->pushMiddleware( Language::class);
+        //$kernel->pushMiddleware( Language::class);
         $kernel->appendMiddlewareToGroup('web', Language::class);
         // Load routes
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
@@ -35,7 +35,7 @@ class ContentManagementServiceProvider extends ServiceProvider
         // Publish config
         $this->publishes([
             __DIR__.'/../../config/config.php' => config_path('cms.php'),
-            __DIR__.'/../../resources/views' => resource_path('views'),
+            __DIR__.'/../../partials' => resource_path('views') . '/partials',
         ]);
     }
 
