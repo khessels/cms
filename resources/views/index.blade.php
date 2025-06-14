@@ -1,57 +1,74 @@
 @extends('package-views::layouts.cms')
 
 @section('main')
-    <container class="container-fluid">
-        <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
-            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-                <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                    <a href="/cms/collection/reset">Collection Reset</a><br>
-                    <a href="/cms/collection/reload">Collection Reload</a><br>
-                    <a href="/cms/collection/upload">Collection upload</a><br>
-                    <a href="/cms/collection/delete">Collection delete</a><br>
-                </div>
-                <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                    <a href="/cms/collection/enable">Collection enable</a><br>
-                    <a href="/cms/collection/disable">Collection disable</a><br>
-                    <br>
-                    <a href="/cms/enable">CMS Enable</a><br>
-                    <a href="/cms/disable">CMS Disable</a><br>
-                </div>
-                <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                    <h2 style="color: darkred">*** BE CAREFULL ***</h2>
-                    <a href="/cms/artisan/optimize">Artisan Optimize</a><br>
-                    <form action="/cms/database" method="post">
-                        @csrf
-                        <input type="hidden" name="_method" value="delete">
-                        <input type="hidden" name="app" value="{{ config('cms.app')}}">
-                        <input style="width:200px; color: darkred"  type="submit" value="Delete Database">
-                    </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>CMS</h1>
+                <p>Welcome to the CMS. Here you can manage your pages, collections, and other CMS related tasks.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card" >
+                    <div class="card-body">
+                        <h5 class="card-title">Collection operations</h5>
+                        <a href="/cms/collection/reset">Collection Reset</a><br>
+                        <a href="/cms/collection/reload">Collection Reload</a><br>
+                        <a href="/cms/collection/upload">Collection upload</a><br>
+                        <a href="/cms/collection/delete">Collection delete</a><br>
+                        <hr>
+                        <a href="/cms/collection/enable">Collection enable</a><br>
+                        <a href="/cms/collection/disable">Collection disable</a><br>
+                    </div>
                 </div>
             </div>
-
-
-            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-                <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                    <a href="/cms/image/management" target="_blank">Images management</a>
+            <div class="col-md-3">
+                <div class="card" >
+                    <div class="card-body">
+                        <h5 class="card-title">In-Page content editor</h5>
+                        <a href="/cms/enable">CMS Enable</a><br>
+                        <a href="/cms/disable">CMS Disable</a><br>
+                    </div>
                 </div>
-    {{--            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">--}}
-    {{--                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />--}}
-    {{--            </div>--}}
-    {{--            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">--}}
-    {{--                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />--}}
-    {{--            </div>--}}
             </div>
-            <div class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <div>
-                    <button class="btn btn-primary add-page">Add new page</button>&nbsp;
-                    <form method="POST" action="/cms/page/cache">
-                        @csrf
-                        {{ csrf_field() }}
-                        {{ method_field('DELETE') }}
-                        <button type="submit" class="btn btn-primary">Reload page cache</button>
-                    </form>
+            <div class="col-md-3">
+                <div class="card" >
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: darkred">*** BE CAREFULL ***</h5>
+                        <form action="/cms/database" method="post">
+                            @csrf
+                            <input type="hidden" name="_method" value="delete">
+                            <input type="hidden" name="app" value="{{ config('cms.app')}}">
+                            <input class="btn btn-warning" type="submit" value="Delete Database">
+                        </form>
+                    </div>
                 </div>
-
+            </div>
+            <div class="col-md-3">
+                <div class="card" >
+                    <div class="card-body">
+                        <h5 class="card-title">Image management</h5>
+                        <a href="/cms/image/management" target="_blank">Images management</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-3">
+                <h5 class="card-title">Page operations</h5>
+                <button class="btn btn-primary add-page">Add new page</button>&nbsp;
+                <form method="POST" action="/cms/page/cache">
+                    @csrf
+                    {{ csrf_field() }}
+                    {{ method_field('DELETE') }}
+                    <button type="submit" class="btn btn-primary">Reload page cache</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <table id="tbl_pages">
                     <thead>
                         <tr>
@@ -65,7 +82,7 @@
                             <td>Expire@</td>
                             <td>Last used</td>
                             <td>Active</td>
-
+                            <td>Action</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,6 +99,7 @@
                                     <td>{{ $page['expire_at'] }}</td>
                                     <td>{{ $page['last_seen_at'] }}</td>
                                     <td>{{ $page['status'] }}</td>
+                                    <td><a class="page remove" href="javascript:void( 0)" data-id="{{ $page['id'] }}">Remove</a></td>
                                 </tr>
                             @endforeach
                         @endif
@@ -222,7 +240,7 @@
                 </form>
             </div>
         </div>
-    </container>
+    </div>
 @endsection
 
 @section('footer-js')
@@ -236,5 +254,28 @@
         body.on('click', '.add-page', function( e){
             mdlAddPage.show();
         })
+
+        body.on( 'click', '.page.remove', function( e){
+            //let id = $(this).data('id');
+            let page = $(this).parents('tr').find('td:nth-child(3)').text();
+            if( confirm('Are you sure you want to remove this page: ' + page + '?')){
+                $.ajax({
+                    url: '/cms/page/remove',
+                    type: 'POST',
+                    data: {
+                        _method: 'DELETE',
+                        _token: '{{ csrf_token() }}',
+                        page: page
+                    },
+                    success: function( response){
+                        toastr.warning('Remote Page removed, reload page cache to see changes.');
+                        table.row($(this).parents('tr')).remove().draw();
+                    },
+                    error: function( response){
+                        toastr.error('Error removing page');
+                    }
+                });
+            }
+        });
     </script>
 @endsection

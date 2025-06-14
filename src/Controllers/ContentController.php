@@ -38,6 +38,7 @@ class ContentController extends ControllersController
         $data = json_decode( Storage::disk('public')->get( $url));
         return $data;
     }
+
     public function setImageData( Request $request){
         $all = $request->all();
         $o = ['title' => $all['properties']['title'], 'alt' => $all['properties']['alt'], 'tags' =>  $all['properties']['tags']];
@@ -53,8 +54,8 @@ class ContentController extends ControllersController
         Storage::disk('public')->deleteDirectory($request->directory);
         return $this->imageManagement( $request);
     }
-    public function imagesAction( Request $request){
 
+    public function imagesAction( Request $request){
         if( strtolower( $request->action) === 'delete'){
             $arr = $request->selected_images;
             Storage::disk('public')->delete( $arr);
@@ -74,6 +75,7 @@ class ContentController extends ControllersController
         }
         return $this->imageManagement( $request);
     }
+
     public function imageManagement(Request $request){
         $directory = '';
         if($request->has('directory')){
@@ -102,10 +104,9 @@ class ContentController extends ControllersController
             ->with( 'directories', $directories)
             ->with( 'directory', $directory);
     }
+
     public function store(Request $request)
     {
-        // Initialize an array to store image information
-        $images = [];
         $data = json_decode( $request->data);
 
         // Process each uploaded image
@@ -114,25 +115,11 @@ class ContentController extends ControllersController
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
 
             // Move the image to the desired location
-            //$image->move(public_path($data->directory), $imageName);
             Storage::disk('public')->putFileAs($data->directory, $image, $imageName);
-
-            // Add image information to the array
-//            $images[] = [
-//                'name' => $imageName,
-//                'path' => asset($data->directory . '/' . $imageName),
-//                'filesize' => filesize(public_path('images/'.$imageName))
-//            ];
         }
-
-        // Store images in the database using create method
-//        foreach ($images as $imageData) {
-//            Image::create($imageData);
-//        }
-
         return response()->json(['success'=>`[]]`]);
-        //return $this->imageManagement( $request);
     }
+
     public function getPageFromCMS($page){
         $pages = Cache::get('pages');
         foreach( $pages as $oPage){
@@ -206,9 +193,6 @@ class ContentController extends ControllersController
         }
         return 'NOT FOUND';
     }
-    // public function index( Request $request ){
-    //     return view('cms.index')->with('page','cms');
-    // }
 
     public function cms_enable( Request $request){
         // disable content tag collection
@@ -216,23 +200,22 @@ class ContentController extends ControllersController
         $this->alertNotification('CMS Enabled.');
         return redirect()->back();
     }
+
     public function cms_disable( Request $request){
         // disable content tag collection
         session()->put('cms.enable', false);
         $this->alertNotification('CMS Disabled.');
         return redirect()->back();
     }
+
     public function artisan_optimize( Request $request){
         // run artisan optimize so that tag changes will be propagated
         Artisan::call('optimize', ['--quiet' => true]);
         $this->alertNotification('Artisan optimized.');
         return redirect()->back();
     }
+
     public function collection_enable( Request $request, $language = '*'){
-//        $lang = Lang::locale();
-//        if( ! empty( $language ) ){
-//            $lang = Lang::locale();
-//        }
         // enable content tag collection
         session()->put('cms.collection.enabled', true);
         $this->alertNotification('CMS Tag collection started');
@@ -245,10 +228,6 @@ class ContentController extends ControllersController
         return redirect()->back();
     }
     public function collection_delete( Request $request, $language = '*'){
-//        $lang = Lang::locale();
-//        if( ! empty( $language ) ){
-//            $lang = $language;
-//        }
         // delete tag collection
         Cache::delete('cms.collection');
         $this->alertNotification('CMS Tag collection deleted', 'warning');
@@ -530,10 +509,13 @@ class ContentController extends ControllersController
         ])->get(config('cms.domain') . '/api/page/list/ACTIVE');
         $pages = $response->json();
         Cache::set('pages', $pages);
-        return redirect('/dashboard');
+        return redirect('/cms');
     }
 
-    public function deletePage( Request $request, $page ){
+    public function deletePage( Request $request, $page = null ){
+        if( empty( $page)){
+            $page = $request->get('page');
+        }
         $response = Http::withHeaders([
             'Authentication' => 'bearer ' . config('cms.token'),
             'Content-Type' => 'application/json',
@@ -541,7 +523,7 @@ class ContentController extends ControllersController
             'x-dev' => config('cms.dev'),
             'x-app' => config('cms.app')
         ])->delete(config('cms.domain') . '/api/page/' . $page);
-        return redirect('/dashboard');
+        return redirect('/cms');
     }
     public function addPage( Request $request ){
         $all = $request->all();
@@ -560,7 +542,7 @@ class ContentController extends ControllersController
             'x-dev' => config('cms.dev'),
             'x-app' => config('cms.app')
         ])->post(config('cms.domain') . '/api/page', $all);
-        return redirect('/dashboard');
+        return redirect('/cms');
     }
     public function getPage( Request $request, $page ){
         $response = Http::withHeaders([
@@ -584,6 +566,6 @@ class ContentController extends ControllersController
 
     public function clearPageCache( Request $request){
         Cache::clear('pages');
-        return redirect('/dashboard');
+        return redirect('/cms');
     }
 }
