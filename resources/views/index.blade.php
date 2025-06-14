@@ -18,7 +18,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <h1>CMS</h1>
-                        Welcome to the CMS. Here you can manage your pages, collections, and other CMS related tasks.
+                        Welcome to the CMS. Here you can manage your content, pages & images.
                         Use: We collect the available tags by enabling collection and open the pages (we open the page in each language).
                         The collected tags are then synced with the remote server by uploading them. Once synced we reload them again to create local resource files used by the pages.
                         Only then we will be able to use the in-page cms editor to edit each tag on the page.
@@ -29,13 +29,13 @@
                         <div class="card" >
                             <div class="card-body">
                                 <h5 class="card-title">Collection operations</h5>
-                                <a href="/cms/collection/reset">Collection Reset</a><br>
-                                <a href="/cms/collection/reload">Collection Reload</a><br>
-                                <a href="/cms/collection/upload">Collection upload</a><br>
-                                <a href="/cms/collection/delete">Collection delete</a><br>
+                                <a href="/cms/collection/reset">Reset</a><br>
+                                <a href="/cms/collection/reload">Reload</a><br>
+                                <a href="/cms/collection/upload">Upload</a><br>
+                                <a href="/cms/collection/delete">Delete</a><br>
                                 <hr>
-                                <a href="/cms/collection/enable">Collection enable</a><br>
-                                <a href="/cms/collection/disable">Collection disable</a><br>
+                                <a href="/cms/collection/enable">Start collecting</a><br>
+                                <a href="/cms/collection/disable">Stop collecting</a><br>
                             </div>
                         </div>
                     </div>
@@ -43,8 +43,8 @@
                         <div class="card" >
                             <div class="card-body">
                                 <h5 class="card-title">In-Page content editor</h5>
-                                <a href="/cms/enable">CMS Enable</a><br>
-                                <a href="/cms/disable">CMS Disable</a><br>
+                                <a href="/cms/enable">Enable</a><br>
+                                <a href="/cms/disable">Disable</a><br>
                             </div>
                         </div>
                     </div>
