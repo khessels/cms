@@ -28,7 +28,8 @@ class BladeDirectivesServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::share( 'app_url', config('app.url') );
-        View::share( 'language', app()->getLocale() );
+        $al = app()->getLocale();
+        View::share( 'language', $al );
         if (! app()->runningInConsole()) {
             $pagesCache = Cache::get('pages');
             if( empty( $pagesCache)){
