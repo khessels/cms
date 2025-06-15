@@ -16,10 +16,10 @@ class ContentManagementServiceProvider extends ServiceProvider
 
 
         //$router->aliasMiddleware('language', Language::class);
-        //$router->pushMiddlewareToGroup('web', Language::class);
+        // $router->pushMiddlewareToGroup('web', Language::class);
         // Register the middleware
         //$kernel->pushMiddleware( Language::class);
-        $kernel->appendMiddlewareToGroup('web', Language::class);
+        $kernel->prependMiddlewareToGroup('web', Language::class);
         // Load routes
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
         // $router->routes( function () {

@@ -14,7 +14,7 @@ class LanguagesController extends Controller
     public function languageSwitch(Request $request)
     {
         $language = $request->input('language');
-        Session::put('language', $language);
+        session()->put('locale', $language);
         return redirect()->back()->with('language_switched' , $language);
     }
 }

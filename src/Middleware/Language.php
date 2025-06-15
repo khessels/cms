@@ -77,12 +77,13 @@ class Language
 
         $isNewSession = request()->cookie( session()->getName()) === null;
         if( $isNewSession ) {
-            if( empty( Session::get('language'))) {
-                $lang = $this->preferredLanguage( config('cms.available_locales'), $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-                Session::put('language', $lang);
+            if( empty( $request->session()->get('language'))) {
+                $language = $this->preferredLanguage( config('cms.available_locales'), $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+                session()->put('language', $language);
+                app()->setLocale( $language);
             }
         }
-        $language = Session::get('language');
+        $language = $request->session()->get('language');
         if( ! empty( $language) && $language !== App::getLocale()) {
             app()->setLocale( $language);
         }

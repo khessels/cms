@@ -10,10 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 //Route::any('/{page}', 'ContentController@getPageFromCMS')->where('any', '.*');
 
-Route::group(['prefix' => 'language'], function () {
-    Route::post('/switch', [LanguagesController::class, 'languageSwitch'])->name('post.language.switch');
-});
+
 Route::group(['middleware' => [ 'web']], function () {
+    Route::group(['prefix' => 'language'], function () {
+        Route::post('/switch', [LanguagesController::class, 'languageSwitch'])->name('post.language.switch');
+    });
     Route::group(['middleware' => [ 'role:admin']], function () {
         Route::get('cms', [ContentController::class, 'index'])->name('cms');
         Route::group(['prefix' => 'cms'], function () {
