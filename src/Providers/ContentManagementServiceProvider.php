@@ -14,7 +14,6 @@ class ContentManagementServiceProvider extends ServiceProvider
     {
         // Optional: Register routes, views, etc.
 
-
         //$router->aliasMiddleware('language', Language::class);
         // $router->pushMiddlewareToGroup('web', Language::class);
         // Register the middleware
@@ -22,21 +21,9 @@ class ContentManagementServiceProvider extends ServiceProvider
         //$kernel->prependMiddlewareToGroup('web', Language::class);
         // Load routes
         //$this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
-        //$router->aliasMiddleware('language', Language::class);
+        $router->aliasMiddleware('language', Language::class);
         //$router->pushMiddlewareToGroup('web', 'language');
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
-        // $router->routeMiddleware([
-        //     Route::middleware( [ 'web']) // Replace 'your-middleware' with the desired middleware
-        //         ->group(function () {
-        //             $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
-        //         }),
-        // ]);
-        // $router->routes( function () {
-        //     Route::middleware( [ "web"]) // Replace 'your-middleware' with the desired middleware
-        //     ->group(function () {
-        //        $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
-        //     });
-        // });
 
         // Load views
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'package-views');
