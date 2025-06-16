@@ -8,7 +8,9 @@
                     $selected = 'selected';
                 }
             @endphp
+
             <option value="{{ $locale }}" {{ $selected }}>@c(['key' => $locale, 'default' => $locale ])</option>
         @endforeach
     </select>
+    {{ $locale }}
 </form>
