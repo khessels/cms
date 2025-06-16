@@ -2,15 +2,14 @@
 namespace khessels\cms\Controllers;
 
 use Illuminate\Support\Facades\Session;
-use RecursiveDirectoryIterator;
 
 abstract class Controller
 {
     public function getFilesRecursive($dir) {
         $files = [];
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::SELF_FIRST
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST
         );
 
         foreach ($iterator as $file) {
