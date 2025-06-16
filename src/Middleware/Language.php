@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace khessels\cms\Middleware;
 
 use Closure;
 
