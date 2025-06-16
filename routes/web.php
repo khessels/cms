@@ -4,11 +4,11 @@ use Illuminate\Support\Facades\Route;
 use khessels\cms\Controllers\ContentController;
 use khessels\cms\Controllers\LanguagesController;
 
-Route::group(['middleware' => [ 'web' ]], function () {
+Route::group(['middleware' => [ 'web', 'language' ]], function () {
     Route::group(['prefix' => 'language'], function () {
         Route::post('/switch', [LanguagesController::class, 'languageSwitch'])->name('post.language.switch');
     });
-    Route::group(['middleware' => [ 'role:admin', 'language']], function () {
+    Route::group(['middleware' => [ 'role:admin']], function () {
         Route::get('cms', [ContentController::class, 'index'])->name('cms');
         Route::group(['prefix' => 'cms'], function () {
             Route::group(['prefix' => 'images'], function () {
