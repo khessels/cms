@@ -2,10 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use khessels\cms\Controllers\ContentController;
-use khessels\cms\Controllers\LanguagesController;
 
 Route::group(['middleware' => [ 'web', 'language' ]], function () {
-
     Route::group(['middleware' => [ 'role:admin']], function () {
         Route::get('cms', [ContentController::class, 'index'])->name('cms');
         Route::group(['prefix' => 'cms'], function () {
