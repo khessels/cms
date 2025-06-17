@@ -31,9 +31,15 @@ class ContentManagementServiceProvider extends ServiceProvider
         // Publish config
         $this->publishes([
             __DIR__.'/../../config/config.php' => config_path('cms.php'),
-            __DIR__.'/../../partials' => resource_path('views') . '/partials',
-            __DIR__.'/../../templates' => resource_path('views') . '/templates',
+            __DIR__ . '/../../templates' => resource_path('views') . '/templates',
+            __DIR__ . '/../../partials' => resource_path('views') . '/partials',
         ]);
+
+    }
+
+    public function register()
+    {
+        // Optional: Bind services, etc.
         $this->app->config['filesystems.disks.resources'] = [
             'driver' => 'local',
             'root' => storage_path('app/resources'),
@@ -41,10 +47,5 @@ class ContentManagementServiceProvider extends ServiceProvider
             'throw' => false
         ];
         $this->app->config['app.available_locales'] = ['en', 'es'];
-    }
-
-    public function register()
-    {
-        // Optional: Bind services, etc.
     }
 }
