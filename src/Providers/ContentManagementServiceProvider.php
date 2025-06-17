@@ -13,16 +13,8 @@ class ContentManagementServiceProvider extends ServiceProvider
     public function boot( Router $router, Kernel $kernel)
     {
         // Optional: Register routes, views, etc.
+        $router->aliasMiddleware('language', Language::class);
 
-        //$router->aliasMiddleware('language', Language::class);
-        // $router->pushMiddlewareToGroup('web', Language::class);
-        // Register the middleware
-
-        //$kernel->prependMiddlewareToGroup('web', Language::class);
-        // Load routes
-        //$this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
-        //$router->aliasMiddleware('language', Language::class);
-        //$router->pushMiddlewareToGroup('web', 'language');
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
 
         // Load views
@@ -30,7 +22,7 @@ class ContentManagementServiceProvider extends ServiceProvider
 
         // Publish config
         $this->publishes([
-            __DIR__.'/../../config/config.php' => config_path('cms.php'),
+            __DIR__ . '/../../config/config.php' => config_path('cms.php'),
             __DIR__ . '/../../templates' => resource_path('views') . '/templates',
             __DIR__ . '/../../partials' => resource_path('views') . '/partials',
         ]);
