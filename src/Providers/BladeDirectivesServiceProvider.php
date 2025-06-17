@@ -27,16 +27,21 @@ class BladeDirectivesServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::share( 'app_url', config('app.url') );
-        $l = Session::get('language');
-        $language = empty( $l ) ? app()->getLocale() : Session::get('language');
-        View::share( 'language', $language );
+        view()->share( 'app_url', config('app.url') );
+
+        $cms = empty( session('cms.enable')) ? false : true;
+        view()->share('cms', $cms);
+
+        $language = empty( Session::get('language') ) ? app()->getLocale() : Session::get('language');
+        view()->share( 'language', $language );
+
         if (! app()->runningInConsole()) {
             $pagesCache = Cache::get('pages');
             if( empty( $pagesCache)){
                 ContentController::_retrievePages();
             }
         }
+
         Blade::directive('money_old', function ( $amount) {
             return "<?php echo '€' . number_format($amount, 2, ',', '.'); ?>";
         });

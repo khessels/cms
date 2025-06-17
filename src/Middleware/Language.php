@@ -73,9 +73,6 @@ class Language
      */
     public function handle(Request $request, Closure $next): Response
     {
-         $cms = empty( session('cms.enable')) ? false : true;
-        view()->share('cms', $cms);
-
         $isNewSession = request()->cookie( session()->getName()) === null;
         if( $isNewSession ) {
             if( empty( Session::get('language'))) {
