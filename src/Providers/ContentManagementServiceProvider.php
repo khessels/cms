@@ -23,8 +23,7 @@ class ContentManagementServiceProvider extends ServiceProvider
         // Publish config
         $this->publishes([
             __DIR__ . '/../../config/config.php' => config_path('cms.php'),
-            __DIR__ . '/../../templates' => resource_path('views') . '/templates',
-            __DIR__ . '/../../partials' => resource_path('views') . '/partials',
+            __DIR__ . '/../../resources/views' => resource_path('views') ,
         ]);
 
     }
