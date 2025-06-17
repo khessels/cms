@@ -21,7 +21,7 @@ class ContentManagementServiceProvider extends ServiceProvider
         //$kernel->prependMiddlewareToGroup('web', Language::class);
         // Load routes
         //$this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
-        $router->aliasMiddleware('language', Language::class);
+        //$router->aliasMiddleware('language', Language::class);
         //$router->pushMiddlewareToGroup('web', 'language');
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
 
@@ -32,6 +32,7 @@ class ContentManagementServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../../config/config.php' => config_path('cms.php'),
             __DIR__.'/../../partials' => resource_path('views') . '/partials',
+            __DIR__.'/../../templates' => resource_path('views') . '/templates',
         ]);
         $this->app->config['filesystems.disks.resources'] = [
             'driver' => 'local',

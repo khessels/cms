@@ -73,7 +73,7 @@ class Language
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $cms = empty( session('cms.enable')) ? false : true;
+         $cms = empty( session('cms.enable')) ? false : true;
         view()->share('cms', $cms);
 
         $isNewSession = request()->cookie( session()->getName()) === null;
@@ -89,6 +89,7 @@ class Language
         }
 
         $lang = Lang::locale();
+        view()->share( 'language', $lang );
         $a = Storage::disk('resources')->get( $lang);
         if( ! empty( $a)){
             $a = unserialize( $a);

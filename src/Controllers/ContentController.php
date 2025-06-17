@@ -49,7 +49,7 @@ class ContentController extends ControllersController
                 }
             }
         }
-        return view( 'package-views::index')
+        return view( 'package-views::cms')
             ->with( 'template_pages', $templateNames)
             ->with( 'page', 'image-management')
             ->with( 'files', $arr)

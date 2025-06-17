@@ -1,6 +1,6 @@
 <?php
 
-namespace Khessels\Cms\Providers;
+namespace khessels\cms\Providers;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +19,7 @@ class BladeDirectivesServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $s = ' ';
     }
 
     /**
@@ -28,8 +28,9 @@ class BladeDirectivesServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::share( 'app_url', config('app.url') );
-        $al = app()->getLocale();
-        View::share( 'language', $al );
+        $l = Session::get('language');
+        $language = empty( $l ) ? app()->getLocale() : Session::get('language');
+        View::share( 'language', $language );
         if (! app()->runningInConsole()) {
             $pagesCache = Cache::get('pages');
             if( empty( $pagesCache)){
@@ -48,14 +49,13 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             return "<?php echo Number::format( $number,  precision: 0, locale: App::getLocale()); ?>";
         });
 
-
         Blade::directive('round', function ( $amount, $precision = 1) {
             return "<?php echo round( $amount, $precision); ?>";
         });
         // $rey = app()->runningInConsole();
 //        if (! app()->runningInConsole()) {
         Blade::directive('c', function ( string $expression) {
-            return "<?php echo khessels\cms\Controllers\ContentController::translate( $expression); ?>";
+            return "<?php echo App\Http\Controllers\ContentController::translate( $expression); ?>";
         });
 //        }
 
