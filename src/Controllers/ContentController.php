@@ -103,34 +103,34 @@ class ContentController extends ControllersController
         return $this->imageManagement( $request);
     }
 
-    public function imageManagement(Request $request){
-        $directory = '';
-        if($request->has('directory')){
-            $directory = $request->get('directory');
-        }
-        $directories = Storage::disk('public')->allDirectories();
-        $files = Storage::disk('public')->files( $directory);
-        $arr = [];
-        $data = [];
-        foreach( $files as $file){
-            $extension =  pathinfo($file, PATHINFO_EXTENSION);
-            if( ! in_array($extension, [ 'gitignore'] )){
-                if( in_array( $extension, ['json'])){
-                    $data[ $file] = json_decode( Storage::disk('public')->get( $file));
-                }
-                if( in_array( $extension, $this->acceptedImageFileExtensions ) ){
-                    $arr[] = $file;
-                }
-            }
-        }
-        return view("package-views::image-management")
-            ->with( 'page', 'image-management')
-            ->with( 'files', $arr)
-            ->with( 'data', $data)
-            ->with( 'accepted_files', $this->acceptedImageFileExtensions)
-            ->with( 'directories', $directories)
-            ->with( 'directory', $directory);
-    }
+    // public function imageManagement(Request $request){
+    //     $directory = '';
+    //     if($request->has('directory')){
+    //         $directory = $request->get('directory');
+    //     }
+    //     $directories = Storage::disk('public')->allDirectories();
+    //     $files = Storage::disk('public')->files( $directory);
+    //     $arr = [];
+    //     $data = [];
+    //     foreach( $files as $file){
+    //         $extension =  pathinfo($file, PATHINFO_EXTENSION);
+    //         if( ! in_array($extension, [ 'gitignore'] )){
+    //             if( in_array( $extension, ['json'])){
+    //                 $data[ $file] = json_decode( Storage::disk('public')->get( $file));
+    //             }
+    //             if( in_array( $extension, $this->acceptedImageFileExtensions ) ){
+    //                 $arr[] = $file;
+    //             }
+    //         }
+    //     }
+    //     return view("package-views::image-management")
+    //         ->with( 'page', 'image-management')
+    //         ->with( 'files', $arr)
+    //         ->with( 'data', $data)
+    //         ->with( 'accepted_files', $this->acceptedImageFileExtensions)
+    //         ->with( 'directories', $directories)
+    //         ->with( 'directory', $directory);
+    // }
 
     public function store(Request $request)
     {
@@ -223,14 +223,14 @@ class ContentController extends ControllersController
 
     public function cms_enable( Request $request){
         // disable content tag collection
-        session()->put('cms.enable', true);
+        Session::put('cms.enable', true);
         $this->alertNotification('CMS Enabled.');
         return redirect()->back();
     }
 
     public function cms_disable( Request $request){
         // disable content tag collection
-        session()->put('cms.enable', false);
+        Session::put('cms.enable', false);
         $this->alertNotification('CMS Disabled.');
         return redirect()->back();
     }
@@ -244,13 +244,13 @@ class ContentController extends ControllersController
 
     public function collection_enable( Request $request, $language = '*'){
         // enable content tag collection
-        session()->put('cms.collection.enabled', true);
+        Session::put('cms.collection.enabled', true);
         $this->alertNotification('CMS Tag collection started');
         return redirect()->back();
     }
     public function collection_disable( Request $request){
         // disable content tag collection
-        session()->put('cms.collection.enabled', false);
+        Session::put('cms.collection.enabled', false);
         $this->alertNotification('CMS Tag collection stopped', 'warning');
         return redirect()->back();
     }
@@ -277,7 +277,7 @@ class ContentController extends ControllersController
                 ->post(config('cms.domain') . '/api/expressions', ['expressions' => $data]);
             Cache::delete('cms.collection');
             // disable content tag collection
-            session()->put('cms.collection.enabled', false);
+            Session::put('cms.collection.enabled', false);
         }
         $this->alertNotification('CMS Tag collection uploaded !! Collection stopped', 'error');
         return redirect()->back();
@@ -287,7 +287,7 @@ class ContentController extends ControllersController
         if( ! empty( $language ) ){
             $lang = $language;
         }
-        session()->put('cms.collection.enabled', false);
+        Session::put('cms.collection.enabled', false);
         // delete language files
         if( $lang !== '*' ) {
             Storage::disk('resources')->delete($lang);
@@ -480,7 +480,7 @@ class ContentController extends ControllersController
             if( $expression['key'] == 'outro-2'){
                 $s = '';
             }
-            if( session('cms.collection.enabled')){
+            if( Session::get('cms.collection.enabled')){
                 self::addToCMSCollectionCache( $expression);
             }
             // $val = $val !== null ? $val : ( isset($expression['default']) ? $expression['default'] : $expression['key']);
@@ -498,7 +498,7 @@ class ContentController extends ControllersController
         try{
             $resources = Cache::get('content') ;
             $resources = empty( $resources) ? [] : $resources;
-            $content = self::_translate( $expression, $resources, session('cms.enable') );
+            $content = self::_translate( $expression, $resources, Session::get('cms.enable') );
             if( $expression['key'] === 'outro-2'){
                 $s = '';
             }
