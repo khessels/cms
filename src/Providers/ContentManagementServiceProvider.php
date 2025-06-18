@@ -26,6 +26,7 @@ class ContentManagementServiceProvider extends ServiceProvider
             __DIR__ . '/../../resources/views/layouts' => resource_path('views') . '/layouts',
             __DIR__ . '/../../resources/views/partials' => resource_path('views') . '/partials',
             __DIR__ . '/../../resources/views/templates' => resource_path('views') . '/templates',
+            __DIR__ . '/../../resources/views/modals' => resource_path('views') . '/partials/cms-modals',
         ]);
 
     }
