@@ -40,6 +40,5 @@ class ContentManagementServiceProvider extends ServiceProvider
             'serve' => false,
             'throw' => false
         ];
-        $this->app->config['app.available_locales'] = ['en', 'es'];
     }
 }

@@ -9,7 +9,7 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
         Route::post('/switch', [LanguageController::class, 'update'])->name('post.language.switch');
     });
 
-    Route::group(['middleware' => [ 'role:admin']], function () {
+    Route::group(['middleware' => [ 'role:admin|developer']], function () {
         Route::get('cms', [ContentController::class, 'index'])->name('cms');
         Route::group(['prefix' => 'cms'], function () {
             Route::group(['prefix' => 'images'], function () {
