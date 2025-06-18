@@ -73,6 +73,9 @@ class Language
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $name = $request->route()->getName();
+        view()->share( 'page', $name );
+
         $isNewSession = request()->cookie( session()->getName()) === null;
         if( $isNewSession ) {
             if( empty( Session::get('language'))) {
