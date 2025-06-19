@@ -76,6 +76,9 @@ class Language
         $name = $request->route()->getName();
         view()->share( 'page', $name );
 
+        $cms = empty( Session::get('cms.enable')) ? false : true;
+        view()->share('cms', $cms);
+
         $isNewSession = request()->cookie( session()->getName()) === null;
         if( $isNewSession ) {
             if( empty( Session::get('language'))) {

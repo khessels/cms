@@ -29,11 +29,8 @@ class BladeDirectivesServiceProvider extends ServiceProvider
     {
         view()->share( 'app_url', config('app.url') );
 
-        $cms = empty( Session::get('cms.enable')) ? false : true;
-        view()->share('cms', $cms);
-
-        $language = empty( Session::get('language') ) ? app()->getLocale() : Session::get('language');
-        view()->share( 'language', $language );
+        // $language = empty( Session::get('language') ) ? app()->getLocale() : Session::get('language');
+        // view()->share( 'language', $language );
 
         if (! app()->runningInConsole()) {
             $pagesCache = Cache::get('pages');
