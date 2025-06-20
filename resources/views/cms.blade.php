@@ -102,23 +102,23 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @if( ! empty( Cache::get('pages')))
+                                @if( ! empty( Cache::get('pages')))
                                     @foreach( Cache::get('pages') as $page)
                                         <tr>
-                                            <td>{{ $page['id'] }}</td>
-                                            <td>{{ $page['parent_id'] }}</td>
-                                            <td>{{ $page['page'] }}</td>
-                                            <td>{{ $page['template'] }}</td>
-                                            <td>{{ $page['properties'] ?? '' }}</td>
-                                            <td>{{ $page['roles'] }}</td>
-                                            <td>{{ $page['publish_at'] }}</td>
-                                            <td>{{ $page['expire_at'] }}</td>
-                                            <td>{{ $page['last_seen_at'] }}</td>
-                                            <td>{{ $page['status'] }}</td>
+                                            <td>{{ $page['id'] ?? ''}}</td>
+                                            <td>{{ $page['parent_id'] ?? ''}}</td>
+                                            <td>{{ $page['page'] ?? ''}}</td>
+                                            <td>{{ $page['template'] ?? ''}}</td>
+                                            <td>--</td>
+                                            <td>{{ $page['roles'] ?? ''}}</td>
+                                            <td>{{ $page['publish_at'] ?? ''}}</td>
+                                            <td>{{ $page['expire_at'] ?? ''}}</td>
+                                            <td>{{ $page['last_seen_at'] ?? ''}}</td>
+                                            <td>{{ $page['status'] ?? ''}}</td>
                                             <td><a class="page remove" href="javascript:void( 0)" data-id="{{ $page['id'] }}">Remove</a></td>
                                         </tr>
                                     @endforeach
-                                @endif --}}
+                                @endif
                             </tbody>
                         </table>
                     </div>
