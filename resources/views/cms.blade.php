@@ -102,7 +102,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if( ! empty( Cache::get('pages')))
+                                {{-- @if( ! empty( Cache::get('pages')))
                                     @foreach( Cache::get('pages') as $page)
                                         <tr>
                                             <td>{{ $page['id'] }}</td>
@@ -118,7 +118,7 @@
                                             <td><a class="page remove" href="javascript:void( 0)" data-id="{{ $page['id'] }}">Remove</a></td>
                                         </tr>
                                     @endforeach
-                                @endif
+                                @endif --}}
                             </tbody>
                         </table>
                     </div>

@@ -22,9 +22,9 @@ class ContentController extends ControllersController
 
     public function index( Request $request)
     {
+        $templateNames = [];
         $directoryPath = resource_path( 'views') . '/templates';
         $files = File::allFiles( $directoryPath);
-        $templateNames = [];
         foreach( $files as $file){
             $fileName = $file->getFilename();
             $templateNames[] = explode( '.', substr( $fileName, 0, strlen( $directoryPath)))[ 0];
