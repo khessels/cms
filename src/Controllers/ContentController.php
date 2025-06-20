@@ -22,7 +22,7 @@ class ContentController extends ControllersController
 
     public function index( Request $request)
     {
-        $directoryPath = resource_path( 'views/templates');
+        $directoryPath = resource_path( 'views') . '/templates';
         $files = File::allFiles( $directoryPath);
         $templateNames = [];
         foreach( $files as $file){
@@ -74,12 +74,12 @@ class ContentController extends ControllersController
     }
     public function createImagesDirectory( Request $request){
         Storage::disk('public')->makeDirectory($request->parent . '/' . $request->directory);
-        return $this->imageManagement( $request);
+        return redirect()->back();
     }
 
     public function deleteImagesDirectory( Request $request){
         Storage::disk('public')->deleteDirectory($request->directory);
-        return $this->imageManagement( $request);
+        return redirect()->back();
     }
 
     public function imagesAction( Request $request){
@@ -100,7 +100,7 @@ class ContentController extends ControllersController
                 Storage::disk('public')->move( $image . '.' . $request->language . ".json", $moveto . '/' . $imageName . '.' . $request->language . '.json');
             }
         }
-        return $this->imageManagement( $request);
+        return redirect()->back();;
     }
 
     // public function imageManagement(Request $request){
