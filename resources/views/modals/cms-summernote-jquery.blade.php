@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
     toastr.info('Direct CMS Active')
-    let app = '{{ config('kcs-content-manager.app')}}'
+    let app = '{{ config('cms.app')}}'
     toastr.info( app)
     $(document).ready(function() {
         $('.cms').summernote();
