@@ -2,7 +2,7 @@
         integrity="sha512-/4EpSbZW47rO/cUIb0AMRs/xWwE8pyOLf8eiDWQ6sQash5RP1Cl8Zi2aqa4QEufjeqnzTK8CLZWX7J5ZjLcc1Q=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript">
-    toastr.info('Direct CMS Active')
+    toastr.info('Direct CMS Active: tinymce')
     let app = '{{ config('cms.app')}}'
     $( document ).ready(function() {
         const config = {

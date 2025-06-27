@@ -1,7 +1,7 @@
 <script src="/assets/summernote-0.9.0-dist/summernote-bs5.min.js"></script>
 
 <script type="text/javascript">
-    toastr.info('Direct CMS Active')
+    toastr.info('Direct CMS Active: summernote')
     let app = '{{ config('cms.app')}}'
     toastr.info( app)
     $(document).ready(function() {

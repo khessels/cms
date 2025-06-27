@@ -23,7 +23,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    toastr.info('Direct CMS Active')
+    toastr.info('Direct CMS Active: bootstrap-tinymce')
 
     let app = '{{ config('cms.app')}}'
     let body = $('body');
