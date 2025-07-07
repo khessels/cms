@@ -126,184 +126,230 @@
             </div>
             <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                 <div class="section" style="margin: 20px;">
-                        <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
-                            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-                                <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                                    <form action="{{ route('cms.dropzone.store') }}" method="post" enctype="multipart/form-data" id="image-upload" class="dropzone">
-                                        <input type="hidden" name="directory" value="{{ $directory }}">
-                                        @csrf
-                                    </form>
-                                    <button id="uploadFile" class="btn btn-primary mt-1">Upload Images</button>
+
+
+                        <div class="row">
+                            <div class="col-12">
+                                <form action="{{ route('cms.dropzone.store') }}" method="post" enctype="multipart/form-data" id="image-upload" class="dropzone">
+                                    <input type="hidden" name="directory" value="{{ $directory }}">
+                                    @csrf
+                                </form>
+                                <button id="uploadFile" class="btn btn-primary mt-1">Upload Images</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <select id="sel_actions">
+                                    <option value="" selected>{{__('Select')}}</option>
+                                    <option value="delete" >{{__('Delete')}}</option>
+                                    <option value="archive" >{{__('Archive')}}</option>
+                                </select>
+                                <button id="btn_action" type="button" class="btn btn-primary disabled">{{__('Apply')}}</button>
+                                <table id="tbl_resources" class="table table-striped" style="width:100%; font-size:80%">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="cb_select_all"> {{__('Select')}}</th>
+                                            <th>{{__('Preview')}}</th>
+                                            <th>{{__('Name')}}</th>
+                                            <th>{{__('Tags')}}</th>
+                                            <th>{{__('Dimensions')}}</th>
+                                            <th>{{__('Alt')}}</th>
+                                            <th>{{__('Title')}}</th>
+                                            <th>{{__('Actions')}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach( $resourceList as $resource)
+                                            <tr>
+                                                <td><input type="checkbox" value="{{ $resource[ 'filename']}}" data-id="{{ $resource[ 'filename']}}"></td>
+                                                <td><img style="height:40px" height="40px" src="{{ $resource[ 'url'] }}" alt="" title=""></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
+                                                    <span disabled>cpy link</span>
+                                                    <span disabled>copy tag</span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <form action="/cms/image/management" method="POST">
+                                    @csrf
+                                    <h4>Image Directory</h4>
+                                    <select class="form-select" name="directory" id="selDirectory" onchange="this.form.submit()">
+                                        <option value="" selected>Root</option>
+                                        @foreach( $directories as $_directory)
+                                            @php
+                                                $selected = '';
+                                                if( $directory === $_directory){
+                                                    $selected = 'selected';
+                                                }
+                                            @endphp
+                                            <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
+                                        @endforeach
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <form action="/cms/images/directory" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="directory" value="{{ $directory }}">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <h4>Remove Directory</h4>
+                                    <select class="form-select" name="directory">
+                                        @foreach( $directories as $_directory)
+                                            @php
+                                                $selected = '';
+                                                if( $directory === $_directory){
+                                                    $selected = 'selected';
+                                                }
+                                            @endphp
+                                            <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
+                                        @endforeach
+                                    </select>
+                                    <input  type="submit" class="btn btn-primary" value="Remove directory">
+                                </form>
+                                <form action="/cms/images/directory" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="directory" value="{{ $directory }}">
+                                    <h4>Create directory</h4>
+                                    <select class="form-select" name="parent">
+                                        <option value="" selected>Root</option>
+                                        @foreach( $directories as $_directory)
+                                            <option value="{{ $_directory }}">{{ $_directory }}</option>
+                                        @endforeach
+                                    </select>
+                                    <input class="form-control" type="text" name="directory">
+                                    <input type="submit" class="btn btn-primary" value="Create directory">
+                                </form>
+
+                            </div>
+                            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                                <div>
+
+                                    <table id="image-properties">
+                                        <tr>
+                                            <td>
+                                                Language
+                                            </td>
+                                            <td>
+                                                <form action="{{ route('post.language.switch') }}" method="POST">
+                                                    <input type="hidden" name="directory" value="{{ $directory }}">
+                                                    @csrf
+                                                    <select name="language" id="language" class="form-select" onchange="this.form.submit()">
+                                                        @foreach( config('cms.available_locales') as $locale)
+                                                            @php
+                                                                $selected = '';
+                                                                if( app()->getLocale() === $locale){
+                                                                    $selected = 'selected';
+                                                                }
+                                                            @endphp
+                                                            <option value="{{ $locale }}" {{ $selected }}>@c(['key' => $locale, 'collection' =>false ])</option>
+                                                        @endforeach
+                                                    </select>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Title
+                                            </td>
+                                            <td>
+                                                <input class="form-control title">
+                                                <input type="hidden" class="file" value="">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Alt
+                                            </td>
+                                            <td>
+                                                <input class="form-control alt">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Tags
+                                            </td>
+                                            <td>
+                                                <input class="form-control tags">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Apply
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary image-data apply">Apply</button>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                                    <form action="/cms/image/management" method="POST">
-                                        @csrf
-                                        <h4>Image Directory</h4>
-                                        <select class="form-select" name="directory" id="selDirectory" onchange="this.form.submit()">
-                                            <option value="" selected>Root</option>
-                                            @foreach( $directories as $_directory)
-                                                @php
-                                                    $selected = '';
-                                                    if( $directory === $_directory){
-                                                        $selected = 'selected';
-                                                    }
-                                                @endphp
-                                                <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
-                                            @endforeach
-                                        </select>
-                                    </form>
+                                <div>
+            {{--                        <table class="datatable">--}}
+            {{--                            <thead>--}}
+            {{--                                <tr>--}}
+            {{--                                    <th>Language</th>--}}
+            {{--                                    <th>File</th>--}}
+            {{--                                    <th>Title</th>--}}
+            {{--                                    <th>Alt</th>--}}
+            {{--                                </tr>--}}
+            {{--                            </thead>--}}
+            {{--                        </table>--}}
 
-                                    <form action="/cms/images/directory" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="directory" value="{{ $directory }}">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <h4>Remove Directory</h4>
-                                        <select class="form-select" name="directory">
-                                            @foreach( $directories as $_directory)
-                                                @php
-                                                    $selected = '';
-                                                    if( $directory === $_directory){
-                                                        $selected = 'selected';
-                                                    }
-                                                @endphp
-                                                <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
-                                            @endforeach
-                                        </select>
-                                        <input  type="submit" class="btn btn-primary" value="Remove directory">
-                                    </form>
-                                    <form action="/cms/images/directory" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="directory" value="{{ $directory }}">
-                                        <h4>Create directory</h4>
-                                        <select class="form-select" name="parent">
-                                            <option value="" selected>Root</option>
-                                            @foreach( $directories as $_directory)
-                                                <option value="{{ $_directory }}">{{ $_directory }}</option>
-                                            @endforeach
-                                        </select>
-                                        <input class="form-control" type="text" name="directory">
-                                        <input type="submit" class="btn btn-primary" value="Create directory">
-                                    </form>
-
-                                </div>
-                                <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                                    <div>
-
-                                        <table id="image-properties">
-                                            <tr>
-                                                <td>
-                                                    Language
-                                                </td>
-                                                <td>
-                                                    <form action="{{ route('post.language.switch') }}" method="POST">
-                                                        <input type="hidden" name="directory" value="{{ $directory }}">
-                                                        @csrf
-                                                        <select name="language" id="language" class="form-select" onchange="this.form.submit()">
-                                                            @foreach( config('cms.available_locales') as $locale)
-                                                                @php
-                                                                    $selected = '';
-                                                                    if( app()->getLocale() === $locale){
-                                                                        $selected = 'selected';
-                                                                    }
-                                                                @endphp
-                                                                <option value="{{ $locale }}" {{ $selected }}>@c(['key' => $locale, 'collection' =>false ])</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Title
-                                                </td>
-                                                <td>
-                                                    <input class="form-control title">
-                                                    <input type="hidden" class="file" value="">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Alt
-                                                </td>
-                                                <td>
-                                                    <input class="form-control alt">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Tags
-                                                </td>
-                                                <td>
-                                                    <input class="form-control tags">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Apply
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-primary image-data apply">Apply</button>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <div>
-                {{--                        <table class="datatable">--}}
-                {{--                            <thead>--}}
-                {{--                                <tr>--}}
-                {{--                                    <th>Language</th>--}}
-                {{--                                    <th>File</th>--}}
-                {{--                                    <th>Title</th>--}}
-                {{--                                    <th>Alt</th>--}}
-                {{--                                </tr>--}}
-                {{--                            </thead>--}}
-                {{--                        </table>--}}
-
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <form action="/cms/images/action" method="POST">
-                                <input type="hidden" name="directory" value="{{ $directory }}">
-                                @csrf
-                                <input type="hidden" name="language" value="{{ app()->getLocale() }}">
-                                <label>With Selected</label>
-                                <select class="form-select" id="selWithSelected" name="action">
-                                    <option value="">Select</option>
-                                    <option value="delete">Delete</option>
-                                    <option value="move">Move</option>
-                                </select>
-                                <select class="form-select" name="moveto" id="moveto" style="display: none;">
-                                    <option value="" selected>Root</option>
-                                    @foreach( $directories as $_directory)
-                                        @php
-                                            $selected = '';
-                                            if( $directory === $_directory){
-                                                $selected = 'selected';
-                                            }
-                                        @endphp
-                                        <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
-                                    @endforeach
-                                </select>
-                                <input type="submit" class="btn btn-primary" value="Apply">
-                                <div class="grid-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
-                                    @foreach( $files as $file)
-                                        @php
-                                            $url = "/storage/" . $file;
-
-                                        @endphp
-                                        <div class="grid-item">
-                                            <img style="width:100px;" src="{{ $url }}" alt="" class="img" data-directory="{{ $directory }}" data-file="{{ $file }}" data-url="{{ $url }}"/><br>
-                {{--                            <label>{{ $url }}</label><br>--}}
-                                            <input type="checkbox" name=selected_images[] value="{{ $file }}">
-                                        </div>
-
-                                    @endforeach
-                                </div>
-                            </form>
-                        </div>
                     </div>
+                    <div>
+                        <form action="/cms/images/action" method="POST">
+                            <input type="hidden" name="directory" value="{{ $directory }}">
+                            @csrf
+                            <input type="hidden" name="language" value="{{ app()->getLocale() }}">
+                            <label>With Selected</label>
+                            <select class="form-select" id="selWithSelected" name="action">
+                                <option value="">Select</option>
+                                <option value="delete">Delete</option>
+                                <option value="move">Move</option>
+                            </select>
+                            <select class="form-select" name="moveto" id="moveto" style="display: none;">
+                                <option value="" selected>Root</option>
+                                @foreach( $directories as $_directory)
+                                    @php
+                                        $selected = '';
+                                        if( $directory === $_directory){
+                                            $selected = 'selected';
+                                        }
+                                    @endphp
+                                    <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
+                                @endforeach
+                            </select>
+                            <input type="submit" class="btn btn-primary" value="Apply">
+                            <div class="grid-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
+                                {{-- @foreach( $files as $file)
+                                    @php
+                                        $url = "/storage/images/" . $file;
+
+                                    @endphp
+                                    <div class="grid-item">
+                                        <img style="width:100px;" src="{{ $url }}" alt="" class="img" data-directory="{{ $directory }}" data-file="{{ $file }}" data-url="{{ $url }}"/><br>
+                                        <input type="checkbox" name=selected_images[] value="{{ $file }}">
+                                    </div>
+
+                                @endforeach --}}
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="tab-pane fade" id="api" role="tabpanel" aria-labelledby="api-tab">
 
@@ -454,6 +500,7 @@
 
         let mdlAddPage = new bootstrap.Modal(document.getElementById("mdl_add_page"), {});
         let table = new DataTable('#tbl_pages');
+        let tableResources = new DataTable('#tbl_resources');
 
         body.on('click', '.add-page', function( e){
             mdlAddPage.show();
@@ -553,7 +600,7 @@
             acceptedFiles += "." + aFiles[x];
         }
         Dropzone.autoDiscover = false;
-        var images = {{ Js::from( $files) }};
+
         var myDropzone = new Dropzone(".dropzone", {
             init: function() {
                 myDropzone = this;

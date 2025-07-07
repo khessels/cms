@@ -20,8 +20,48 @@ class ContentController extends ControllersController
 {
     public $acceptedImageFileExtensions = ["jpeg","jpg", "png", "gif", "webp", "pdf", "svg", "pdf"];
 
-    public function index( Request $request)
-    {
+    private function getResources( $request){
+        $filters = $request->all();
+
+        $url = Storage::disk( config("cms.images_disks")[0])->url("");
+        $storageAllResources = Storage::disk( config("cms.images_disks")[0])
+            ->allFiles();
+
+        // iterate the images and create a list of resources
+        $resources = [];
+        foreach( $storageAllResources as $resource){
+            $filename = explode( '/', $resource);
+            $filename = $filename[ count( $filename) - 1];
+            $exploded = explode( '.', $filename);
+            if( strtolower( $exploded[ count( $exploded) -1]) !== 'json'){
+                $resource = [];
+                $resource['url'] = $url . $filename;
+                $resource['uri'] = $url;
+                $resource['filename'] = $filename;
+                $resource['disk'] = config("cms.images_disks")[0];
+                $resources[] = $resource;
+            }
+        }
+
+        // iterate the json partner files of the images and add the json data to the corresponding resource
+        foreach( $storageAllResources as $resource){
+            $filename = explode( '/', $resource);
+            $filename = $filename[ count( $filename) - 1];
+            $exploded = explode( '.', $filename);
+            if( strtolower( $exploded[ count( $exploded) -1]) === 'json'){
+                $resourceIndex = array_column( $resources, null, 'filename')[ $filename] ?? null;
+                if( ! empty( $resource)){
+                    $data = Storage::disk( config("cms.images_disks")[0])->get( $filename);
+                    if( ! empty( $data)){
+                        $resources[ $resourceIndex]['data'] = $data;
+                    }
+                }
+            }
+        }
+        // $data[ $file] = json_decode( Storage::disk( config( "cms.images_disks")[0])->get( $file));
+        return $resources;
+    }
+    private function templateNames( $request){
         $templateNames = [];
         $directoryPath = resource_path( 'views') . '/templates';
         $files = File::allFiles( $directoryPath);
@@ -29,36 +69,41 @@ class ContentController extends ControllersController
             $fileName = $file->getFilename();
             $templateNames[] = explode( '.', substr( $fileName, 0, strlen( $directoryPath)))[ 0];
         }
+        return $templateNames;
+    }
+    public function index( Request $request)
+    {
+        $resources = $this->getResources( $request);
+        $templateNames = $this->templateNames( $request);
 
         $directory = '';
-        if($request->has('directory')){
-            $directory = $request->get('directory');
+        if( $request->has( 'directory')){
+            $directory = $request->get( 'directory');
         }
-        $directories = Storage::disk('public')->allDirectories();
-        $files = Storage::disk('public')->files( $directory);
-        $arr = [];
-        $data = [];
-        foreach( $files as $file){
-            $extension =  pathinfo($file, PATHINFO_EXTENSION);
-            if( ! in_array($extension, [ 'gitignore'] )){
-                if( in_array( $extension, ['json'])){
-                    $data[ $file] = json_decode( Storage::disk('public')->get( $file));
-                }
-                if( in_array( $extension, $this->acceptedImageFileExtensions ) ){
-                    $arr[] = $file;
-                }
-            }
-        }
+        $directories = Storage::disk( config( "cms.images_disks")[ 0])->allDirectories();
+
         return view( 'package-views::cms')
             ->with( 'template_pages', $templateNames)
+            ->with( 'resourceList', $resources)
             ->with( 'page', 'image-management')
-            ->with( 'files', $arr)
-            ->with( 'data', $data)
             ->with( 'accepted_files', $this->acceptedImageFileExtensions)
             ->with( 'directories', $directories)
-            ->with( 'directory', $directory);
+            ->with( 'directory', $directory)->with('resources', []);
     }
+    public function store(Request $request)
+    {
+        $data = json_decode( $request->data);
 
+        // Process each uploaded image
+        foreach($request->file('files') as $image) {
+            // Generate a unique name for the image
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+            // Move the image to the desired location
+            Storage::disk( config("cms.images_disks")[0])->putFileAs($data->directory, $image, $imageName);
+        }
+        return response()->json(['success'=>`[]]`]);
+    }
     public function getImageData( Request $request){
         $data = $request->all();
         $url = $data['file'] . '.' . $data['language'] . ".json";
@@ -132,20 +177,7 @@ class ContentController extends ControllersController
     //         ->with( 'directory', $directory);
     // }
 
-    public function store(Request $request)
-    {
-        $data = json_decode( $request->data);
 
-        // Process each uploaded image
-        foreach($request->file('files') as $image) {
-            // Generate a unique name for the image
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-
-            // Move the image to the desired location
-            Storage::disk('public')->putFileAs($data->directory, $image, $imageName);
-        }
-        return response()->json(['success'=>`[]]`]);
-    }
 
     public function getPageFromCMS($page){
         $pages = Cache::get('pages');
