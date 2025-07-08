@@ -67,24 +67,28 @@ class ContentController extends ControllersController
     public function updateImageAttributes( Request $request){
         $data       = $request->all();
         $filename   = $data[ 'filename'];
+        $language   = app()->getLocale();
+        if( ! empty( $data[ 'language'])){
+            $language = $data[ 'language'];
+        }
         $disk       = config( "cms.images_disks")[ 0];
         $file       = Storage::disk( $disk)->get( $filename . '.json');
 
+        $json = [];
         if( ! empty( $file)){
             $json = json_decode( $file, true);
-        }else{
-            $json = [];
         }
+
         if( ! empty( $data[ 'title'])){
-                $json[ app()->getLocale() ][ 'title'] = $data[ 'title'];
-            }
-            if( ! empty( $data['alt'])){
-                $json[ app()->getLocale() ][ 'alt'] = $data[ 'alt'];
-            }
-            if( ! empty( $data['tags'])){
-                $json[ app()->getLocale() ][ 'tags'] = explode( ',', $data[ 'tags']);
-            }
-            Storage::disk( $disk)->put( $filename . '.json', json_encode( $json));
+            $json[ $language][ 'title'] = $data[ 'title'];
+        }
+        if( ! empty( $data['alt'])){
+            $json[ $language][ 'alt'] = $data[ 'alt'];
+        }
+        if( ! empty( $data['tags'])){
+            $json[ 'tags'] = explode( ',', $data[ 'tags']);
+        }
+        Storage::disk( $disk)->put( $filename . '.json', json_encode( $json));
 
 
         if ($request->wantsJson()) {
@@ -126,23 +130,43 @@ class ContentController extends ControllersController
         }
         return response()->json(['success'=>`[]]`]);
     }
-    public function getImageData( Request $request){
-        $data = $request->all();
-        $url = $data[ 'file'] . '.' . $data[ 'language'] . ".json";
-        $data = json_decode( Storage::disk( 'public')->get( $url));
-        return $data;
-    }
+    // public function getImageData( Request $request){
+    //     $data = $request->all();
+    //     $url = $data[ 'file'] . '.' . $data[ 'language'] . ".json";
+    //     $data = json_decode( Storage::disk( 'public')->get( $url));
+    //     return $data;
+    // }
 
-    public function createImagesDirectory( Request $request){
-        Storage::disk('public')->makeDirectory($request->parent . '/' . $request->directory);
+    // public function createImagesDirectory( Request $request){
+    //     Storage::disk('public')->makeDirectory($request->parent . '/' . $request->directory);
+    //     return redirect()->back();
+    // }
+
+    // public function deleteImagesDirectory( Request $request){
+    //     Storage::disk('public')->deleteDirectory($request->directory);
+    //     return redirect()->back();
+    // }
+    public function removeImages( Request $request){
+        $ids = explode(',', $request->query( 'ids'));
+        $storageAllResources = Storage::disk( config( "cms.images_disks")[ 0])
+            ->allFiles();
+        foreach( $storageAllResources as $resource){
+            $filename = explode( '/', $resource);
+            $filename = $filename[ count( $filename) - 1];
+            if( in_array( strtolower( $filename), $ids)){
+                // remove the image
+                Storage::disk( config( "cms.images_disks")[ 0])->delete( $resource);
+                // remove the json file
+                Storage::disk( config( "cms.images_disks")[ 0])->delete( $filename . '.json');
+            }
+        }
+
+        if ($request->wantsJson()) {
+           // Handle JSON response
+           return response()->json(['success' => true]);
+        }
         return redirect()->back();
     }
-
-    public function deleteImagesDirectory( Request $request){
-        Storage::disk('public')->deleteDirectory($request->directory);
-        return redirect()->back();
-    }
-
     public function imagesAction( Request $request){
         if( strtolower( $request->action) === 'delete'){
             $arr = $request->selected_images;
@@ -161,7 +185,7 @@ class ContentController extends ControllersController
                 Storage::disk('public')->move( $image . '.' . $request->language . ".json", $moveto . '/' . $imageName . '.' . $request->language . '.json');
             }
         }
-        return redirect()->back();;
+        return redirect()->back();
     }
 
     public function getPageFromCMS($page){
@@ -466,9 +490,9 @@ class ContentController extends ControllersController
                     if( ! empty( $data[ $language]['alt'])){
                         $imgs[ $index]->setAttribute('alt', $data[ $language]['alt']);
                     }
-                    if( ! empty( $data[ $language]['tags'])){
-                        $imgs[ $index]->setAttribute('data-tags', implode(',', $data[ $language]['tags']));
-                    }
+                }
+                if( ! empty( $data['tags'])){
+                    $imgs[ $index]->setAttribute('data-tags', implode(',', $data['tags']));
                 }
             }
         }

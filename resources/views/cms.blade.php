@@ -146,18 +146,7 @@
                                         <button id="btn_action" type="button" class="btn btn-primary disabled">{{__('Apply')}}</button>
                                     </div>
                                     <div class="col-4">
-                                        <label for="img_language">{{__('Language')}}</label>
-                                        <select id="img_language">
-                                            @foreach( config('cms.available_locales') as $locale)
-                                                @php
-                                                    $selected = '';
-                                                    if( app()->getLocale() === $locale){
-                                                        $selected = 'selected';
-                                                    }
-                                                @endphp
-                                                <option value="{{ $locale }}" {{ $selected }}>@c(['key' => $locale, 'default' => $locale ])</option>
-                                            @endforeach
-                                        </select>
+                                        <p><strong>Click on the image preview to copy the link</strong></p>
                                     </div>
                                 </div>
                                 <table id="tbl_resources" class="table table-striped" style="width:100%; font-size:80%">
@@ -165,6 +154,7 @@
                                         <tr>
                                             <th><input type="checkbox" id="cb_select_all"> {{__('Select')}}</th>
                                             <th>{{__('Preview')}}</th>
+                                            <th>{{__('Lang.')}}</th>
                                             <th>{{__('Alt')}}</th>
                                             <th>{{__('Title')}}</th>
                                             <th>{{__('Dimensions')}}</th>
@@ -179,32 +169,49 @@
                                                     continue;
                                                 }
                                                 $lang = app()->getLocale();
-                                                if( ! isset( $resource[ 'data'][ $lang])){
-                                                    $resource[ 'data'][ $lang] = [];
-                                                }
-                                                if( ! isset( $resource[ 'data'][ $lang][ 'alt'])){
-                                                    $resource[ 'data'][ $lang][ 'alt'] = '';
-                                                }
-                                                if( ! isset( $resource[ 'data'][ $lang][ 'title'])){
-                                                    $resource[ 'data'][ $lang][ 'title'] = '';
-                                                }
-                                                if( ! isset( $resource[ 'data'][ $lang][ 'tags'])){
-                                                    $resource[ 'data'][ $lang][ 'tags'] = [];
-                                                }
-                                                if( ! isset( $resource[ 'data'][ $lang][ 'width']) ){
-                                                    $resource[ 'data'][ $lang][ 'width'] = 0;
-                                                }
-                                                if( ! isset( $resource[ 'data'][ $lang][ 'height']) ){
-                                                    $resource[ 'data'][ $lang][ 'height'] = 0;
+                                                foreach( config('cms.available_locales') as $locale){
+                                                    if( ! isset( $resource[ 'data'][ $locale])){
+                                                        $resource[ 'data'][ $locale] = [];
+                                                    }
+                                                    if( ! isset( $resource[ 'data'][ $locale][ 'alt'])){
+                                                        $resource[ 'data'][ $locale][ 'alt'] = '';
+                                                    }
+                                                    if( ! isset( $resource[ 'data'][ $locale][ 'title'])){
+                                                        $resource[ 'data'][ $locale][ 'title'] = '';
+                                                    }
+                                                    if( ! isset( $resource[ 'data'][ 'tags'])){
+                                                        $resource[ 'data'][ 'tags'] = [];
+                                                    }
+                                                    if( ! isset( $resource[ 'data'][ 'width']) ){
+                                                        $resource[ 'data'][ 'width'] = 0;
+                                                    }
+                                                    if( ! isset( $resource[ 'data'][ 'height']) ){
+                                                        $resource[ 'data'][ 'height'] = 0;
+                                                    }
                                                 }
                                             @endphp
                                             <tr>
                                                 <td><input type="checkbox" value="{{ $resource[ 'filename']}}" data-id="{{ $resource[ 'filename']}}"></td>
                                                 <td><img data-id="{{ $resource[ 'filename']}}" data-src="{{ $resource[ 'url'] }}" class="resource img" style="height:40px" height="40px" src="{{ $resource[ 'url'] }}" alt="{{ $resource[ 'data'][ $lang][ 'alt'] ?? ''}}" title="{{ $resource[ 'data'][ $lang][ 'title'] ?? ''}}"></td>
-                                                <td>{{ $resource[ 'data'][ $lang][ 'alt']}}</td>
-                                                <td>{{ $resource[ 'data'][ $lang][ 'title']}}</td>
-                                                <td>{{ $resource[ 'data'][ $lang][ 'height']}}, {{ $resource[ 'data'][ $lang][ 'width']}}</td>
-                                                <td>{{ implode(',', $resource[ 'data'][ $lang][ 'tags'])}}</td>
+                                                <td>
+                                                    @foreach( config('cms.available_locales') as $locale)
+                                                        {{ $locale}} <br>
+                                                    @endforeach
+                                                </td>
+                                                <td>
+                                                    @foreach( config('cms.available_locales') as $locale)
+                                                        {{ $resource[ 'data'][ $locale][ 'alt']}} <br>
+                                                    @endforeach
+                                                </td>
+                                                <td>
+                                                    @foreach( config('cms.available_locales') as $locale)
+                                                        {{ $resource[ 'data'][ $locale][ 'title']}} <br>
+                                                    @endforeach
+                                                </td>
+                                                <td>
+                                                    {{ $resource[ 'data'][ 'height']}}, {{ $resource[ 'data'][ 'width']}}<br>
+                                                </td>
+                                                <td>{{ implode(',', $resource[ 'data'][ 'tags'])}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)" class="image attributes update" data-id="{{ $resource[ 'filename']}}">Change</a>
                                                 </td>
@@ -337,45 +344,7 @@
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <form action="/cms/images/action" method="POST">
-                            <input type="hidden" name="directory" value="{{ $directory }}">
-                            @csrf
-                            <input type="hidden" name="language" value="{{ app()->getLocale() }}">
-                            <label>With Selected</label>
-                            <select class="form-select" id="selWithSelected" name="action">
-                                <option value="">Select</option>
-                                <option value="delete">Delete</option>
-                                <option value="move">Move</option>
-                            </select>
-                            <select class="form-select" name="moveto" id="moveto" style="display: none;">
-                                <option value="" selected>Root</option>
-                                @foreach( $directories as $_directory)
-                                    @php
-                                        $selected = '';
-                                        if( $directory === $_directory){
-                                            $selected = 'selected';
-                                        }
-                                    @endphp
-                                    <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
-                                @endforeach
-                            </select>
-                            <input type="submit" class="btn btn-primary" value="Apply">
-                            <div class="grid-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
-                                {{-- @foreach( $files as $file)
-                                    @php
-                                        $url = "/storage/images/" . $file;
 
-                                    @endphp
-                                    <div class="grid-item">
-                                        <img style="width:100px;" src="{{ $url }}" alt="" class="img" data-directory="{{ $directory }}" data-file="{{ $file }}" data-url="{{ $url }}"/><br>
-                                        <input type="checkbox" name=selected_images[] value="{{ $file }}">
-                                    </div>
-
-                                @endforeach --}}
-                            </div>
-                        </form>
-                    </div>
                 </div>
             </div>
             <div class="tab-pane fade" id="api" role="tabpanel" aria-labelledby="api-tab">
@@ -383,7 +352,19 @@
             </div>
 
         </div>
+    {{-- <div class="grid-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
+            @foreach( $files as $file)
+                @php
+                    $url = "/storage/images/" . $file;
 
+                @endphp
+                <div class="grid-item">
+                    <img style="width:100px;" src="{{ $url }}" alt="" class="img" data-directory="{{ $directory }}" data-file="{{ $file }}" data-url="{{ $url }}"/><br>
+                    <input type="checkbox" name=selected_images[] value="{{ $file }}">
+                </div>
+
+            @endforeach
+        </div> --}}
         <div id="mdl_add_page" class="modal" tabindex="-1">
             <div class="modal-dialog">
                 <form method="POST" action="/cms/page/add">
@@ -532,6 +513,29 @@
                             <table>
                                 <tr>
                                     <td>
+                                        Language
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                         <select name="language">
+                                            @foreach( config('cms.available_locales') as $locale)
+                                                @php
+                                                    $selected = '';
+                                                    if( app()->getLocale() === $locale){
+                                                        $selected = 'selected';
+                                                    }
+                                                @endphp
+                                                <option value="{{ $locale }}" {{ $selected }}>@c(['key' => $locale, 'default' => $locale ])</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
                                         Alt
                                     </td>
                                     <td>
@@ -541,7 +545,6 @@
                                     </td>
                                     <td>
                                         (will be slugified)
-
                                     </td>
                                 </tr>
                                 <tr>
@@ -589,7 +592,7 @@
 
         let mdlAddPage = new bootstrap.Modal(document.getElementById("mdl_add_page"), {});
         let table = new DataTable('#tbl_pages');
-        let tableResources = new DataTable('#tbl_resources');
+
 
         body.on('click', '.add-page', function( e){
             mdlAddPage.show();
@@ -619,10 +622,77 @@
         });
     </script>
     <script type="text/javascript">
+        let actionIds = [];
+        let tableResources = new DataTable('#tbl_resources', {
+            "columns": [
+                {"name": "a", "orderable": false},
+                {"name": "b", "orderable": true},
+                {"name": "c", "orderable": true},
+                {"name": "d", "orderable": true},
+                {"name": "e", "orderable": true},
+                {"name": "f", "orderable": true},
+                {"name": "g", "orderable": true},
+                {"name": "h", "orderable": false}
+            ],
+        });
         let directory = '{{ $directory }}';
         let file = undefined;
         let mdlAttributes = new bootstrap.Modal(document.getElementById("mdl_attributes"), {});
 
+        body.on('click', '#btn_action', function( e){
+            e.preventDefault();
+            let action = $('#sel_actions').val();
+            switch( action){
+                case 'delete':
+                    deleteSelected( actionIds);
+                    break;
+            }
+        })
+        function deleteSelected( ids){
+            $.ajax({
+                headers : {
+                    'X-CSRF-Token' : "{{ csrf_token() }}"
+                },
+                dataType: "json",
+                success : function( data) {
+                    window.location.reload()
+                },
+                error: function (a, b, c){
+                    console.log( a)
+                },
+                data: JSON.stringify( ids),
+                url : '/cms/images?ids=' + ids.toString(),
+                type : 'DELETE'
+            });
+        }
+        body.on('click', 'input[type=checkbox]', function(){
+            let val = this.value
+            if( this.checked){
+                actionIds.push( this.value)
+                $('#btn_action').removeClass('disabled');
+            }else{
+                actionIds = actionIds.filter( function( obj ) {
+                    return obj !== val;
+                });
+                if( actionIds.length === 0){
+                    $('#btn_action').addClass('disabled');
+                }
+            }
+        })
+        $('#cb_select_all').on('click', function(){
+            let rows = table.rows( {page:'current'} ).data();
+            if( $(this).is(':checked') ){
+                for( let i = 0; i < rows.length; i++ ){
+                    let email = $.parseHTML( rows[i][0])[0].defaultValue;
+                    $('*[data-id="' + email + '"]').attr('checked', true);
+                }
+            } else {
+                for( let i = 0; i < rows.length; i++ ){
+                    let email = $.parseHTML( rows[i][0])[0].defaultValue;
+                    $('*[data-id="' + email + '"]').attr('checked', false);
+                }
+            }
+        })
         body.on('click', '.resource.img', function (e) {
             // let filename = this.dataset.id;
             let src = this.dataset.src
@@ -639,94 +709,9 @@
             let filename    = this.dataset.id;
             $('#mdl_attributes .filename').val( filename);
             mdlAttributes.show();
-
-            // let alt         = $(document).find('.image.alt.' + filename).val();
-            // let title       = $('.image.title.' + filename).val();
-            // let tags        = $('.image.tags.' + filename).val();
-            // if( ! filename){
-            //     toastr.error('No filename provided');
-            // }
-            // $.ajax({
-            //     url : '/cms/image/attributes',
-            //     type : 'PATCH',
-            //     headers : {
-            //         'X-CSRF-Token' : "{{ csrf_token() }}"
-            //     },
-            //     dataType: 'json',
-            //     data: {
-            //         language: $('#language').val(),
-            //         filename: filename,
-            //         alt:alt,
-            //         title:title,
-            //         tags:tags,
-            //     },
-            //     success : function( data) {
-            //         toastr.success('Image attributes updated successfully');
-            //     },
-            //     error: function (a, b, c){
-            //         console.log( a)
-            //     }
-            // });
         });
 
-        // $('.img').on('click', function (e) {
-        //     console.log(this.dataset.file);
-        //     file = this.dataset.file;
-        //     let language = $('#language').val();
-        //     $.ajax({
-        //         headers : {
-        //             'X-CSRF-Token' : "{{ csrf_token() }}"
-        //         },
-        //         success : function( data) {
-        //             $('#image-properties .title').val( '');
-        //             $('#image-properties .alt').val( '');
-        //             $('#image-properties .tags').val( '');
 
-        //             if( data){
-        //                 $('#image-properties .title').val( data.title);
-        //                 $('#image-properties .alt').val( data.alt);
-        //                 $('#image-properties .tags').val( data.tags);
-        //             }
-        //         },
-        //         error: function (a, b, c){
-        //             console.log( a)
-        //         },
-        //         data:{ language: language, file: file},
-        //         url : '/cms/image/data',
-        //         type : 'GET'
-        //     });
-        // })
-        $('.image-data.apply').on('click', function (e) {
-            let title = $('#image-properties .title').val();
-            let alt = $('#image-properties .alt').val();
-            let tags = $('#image-properties .tags').val();
-            let language = $('#language').val();
-            $.ajax({
-                headers : {
-                    'X-CSRF-Token' : "{{ csrf_token() }}"
-                },
-                success : function( data) {
-                    if( data.length > 0){
-                    }
-                },
-                error: function (a, b, c){
-                    console.log( a)
-                },
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    properties:{ title: title, alt: alt, tags: tags, language: language, file: file }
-                },
-                url : '/cms/image/data',
-                type : 'POST'
-            });
-        })
-        $('#selWithSelected').on('change', function(){
-            if(this.value === 'move'){
-                $(' #moveto').show();
-            }else{
-                $(' #moveto').hide();
-            }
-        })
         let aFiles = @json( $accepted_files);
         let acceptedFiles = "";
         for(let x = 0; x < aFiles.length; x++ ){

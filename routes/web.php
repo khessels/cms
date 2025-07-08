@@ -13,6 +13,7 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
         Route::get('cms', [ContentController::class, 'index'])->name('cms');
         Route::group(['prefix' => 'cms'], function () {
             Route::group(['prefix' => 'images'], function () {
+                Route::delete('/', [ContentController::class, 'removeImages'])->name('cms.images.delete');
                 Route::post('/action', [ContentController::class, 'imagesAction'])->name('cms.images.action');
                 Route::post('/directory', [ContentController::class, 'createImagesDirectory'])->name('cms.images.directory.create');
                 Route::delete('/directory', [ContentController::class, 'deleteImagesDirectory'])->name('cms.images.directory.delete');
