@@ -64,11 +64,7 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-
-
             </div>
             <div class="tab-pane fade" id="pages" role="tabpanel" aria-labelledby="pages-tab">
                 <div class="row">
@@ -126,7 +122,7 @@
             </div>
             <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                 <div class="section" style="margin: 20px;">
-
+                    <div>
 
                         <div class="row">
                             <div class="col-12">
@@ -137,40 +133,80 @@
                                 <button id="uploadFile" class="btn btn-primary mt-1">Upload Images</button>
                             </div>
                         </div>
+                        <hr>
                         <div class="row">
                             <div class="col-12">
-                                <select id="sel_actions">
-                                    <option value="" selected>{{__('Select')}}</option>
-                                    <option value="delete" >{{__('Delete')}}</option>
-                                    <option value="archive" >{{__('Archive')}}</option>
-                                </select>
-                                <button id="btn_action" type="button" class="btn btn-primary disabled">{{__('Apply')}}</button>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <select id="sel_actions">
+                                            <option value="" selected>{{__('Select')}}</option>
+                                            <option value="delete" >{{__('Delete')}}</option>
+                                            <option value="archive" >{{__('Archive')}}</option>
+                                        </select>
+                                        <button id="btn_action" type="button" class="btn btn-primary disabled">{{__('Apply')}}</button>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="img_language">{{__('Language')}}</label>
+                                        <select id="img_language">
+                                            @foreach( config('cms.available_locales') as $locale)
+                                                @php
+                                                    $selected = '';
+                                                    if( app()->getLocale() === $locale){
+                                                        $selected = 'selected';
+                                                    }
+                                                @endphp
+                                                <option value="{{ $locale }}" {{ $selected }}>@c(['key' => $locale, 'default' => $locale ])</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 <table id="tbl_resources" class="table table-striped" style="width:100%; font-size:80%">
                                     <thead>
                                         <tr>
                                             <th><input type="checkbox" id="cb_select_all"> {{__('Select')}}</th>
                                             <th>{{__('Preview')}}</th>
-                                            <th>{{__('Name')}}</th>
-                                            <th>{{__('Tags')}}</th>
-                                            <th>{{__('Dimensions')}}</th>
                                             <th>{{__('Alt')}}</th>
                                             <th>{{__('Title')}}</th>
+                                            <th>{{__('Dimensions')}}</th>
+                                            <th>{{__('Tags')}}</th>
                                             <th>{{__('Actions')}}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach( $resourceList as $resource)
+                                            @php
+                                                if( ! isset( $resource[ 'filename']) || ! isset( $resource[ 'url'])){
+                                                    continue;
+                                                }
+                                                $lang = app()->getLocale();
+                                                if( ! isset( $resource[ 'data'][ $lang])){
+                                                    $resource[ 'data'][ $lang] = [];
+                                                }
+                                                if( ! isset( $resource[ 'data'][ $lang][ 'alt'])){
+                                                    $resource[ 'data'][ $lang][ 'alt'] = '';
+                                                }
+                                                if( ! isset( $resource[ 'data'][ $lang][ 'title'])){
+                                                    $resource[ 'data'][ $lang][ 'title'] = '';
+                                                }
+                                                if( ! isset( $resource[ 'data'][ $lang][ 'tags'])){
+                                                    $resource[ 'data'][ $lang][ 'tags'] = [];
+                                                }
+                                                if( ! isset( $resource[ 'data'][ $lang][ 'width']) ){
+                                                    $resource[ 'data'][ $lang][ 'width'] = 0;
+                                                }
+                                                if( ! isset( $resource[ 'data'][ $lang][ 'height']) ){
+                                                    $resource[ 'data'][ $lang][ 'height'] = 0;
+                                                }
+                                            @endphp
                                             <tr>
                                                 <td><input type="checkbox" value="{{ $resource[ 'filename']}}" data-id="{{ $resource[ 'filename']}}"></td>
-                                                <td><img style="height:40px" height="40px" src="{{ $resource[ 'url'] }}" alt="" title=""></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td><img data-id="{{ $resource[ 'filename']}}" data-src="{{ $resource[ 'url'] }}" class="resource img" style="height:40px" height="40px" src="{{ $resource[ 'url'] }}" alt="{{ $resource[ 'data'][ $lang][ 'alt'] ?? ''}}" title="{{ $resource[ 'data'][ $lang][ 'title'] ?? ''}}"></td>
+                                                <td>{{ $resource[ 'data'][ $lang][ 'alt']}}</td>
+                                                <td>{{ $resource[ 'data'][ $lang][ 'title']}}</td>
+                                                <td>{{ $resource[ 'data'][ $lang][ 'height']}}, {{ $resource[ 'data'][ $lang][ 'width']}}</td>
+                                                <td>{{ implode(',', $resource[ 'data'][ $lang][ 'tags'])}}</td>
                                                 <td>
-                                                    <span disabled>cpy link</span>
-                                                    <span disabled>copy tag</span>
+                                                    <a href="javascript:void(0)" class="image attributes update" data-id="{{ $resource[ 'filename']}}">Change</a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -295,16 +331,7 @@
                                     </table>
                                 </div>
                                 <div>
-            {{--                        <table class="datatable">--}}
-            {{--                            <thead>--}}
-            {{--                                <tr>--}}
-            {{--                                    <th>Language</th>--}}
-            {{--                                    <th>File</th>--}}
-            {{--                                    <th>Title</th>--}}
-            {{--                                    <th>Alt</th>--}}
-            {{--                                </tr>--}}
-            {{--                            </thead>--}}
-            {{--                        </table>--}}
+
 
                                 </div>
                             </div>
@@ -490,6 +517,68 @@
                 </form>
             </div>
         </div>
+        <div id="mdl_attributes" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <form method="POST" action="/cms/image/attributes">
+                    <input type="hidden" name="_method" value="PATCH">
+                    <input type="hidden" name="filename" class="filename" value="">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Set Image Attributes</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @csrf
+                            <table>
+                                <tr>
+                                    <td>
+                                        Alt
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" name="alt">
+                                    </td>
+                                    <td>
+                                        (will be slugified)
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Title
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" name="title">
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Tags
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" name="tags">
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -532,34 +621,81 @@
     <script type="text/javascript">
         let directory = '{{ $directory }}';
         let file = undefined;
+        let mdlAttributes = new bootstrap.Modal(document.getElementById("mdl_attributes"), {});
 
-        $('.img').on('click', function (e) {
-            console.log(this.dataset.file);
-            file = this.dataset.file;
-            let language = $('#language').val();
-            $.ajax({
-                headers : {
-                    'X-CSRF-Token' : "{{ csrf_token() }}"
-                },
-                success : function( data) {
-                    $('#image-properties .title').val( '');
-                    $('#image-properties .alt').val( '');
-                    $('#image-properties .tags').val( '');
+        body.on('click', '.resource.img', function (e) {
+            // let filename = this.dataset.id;
+            let src = this.dataset.src
+            navigator.clipboard.writeText( src)
+                .then(() => {
+                    toastr.success("successfully copied");
+                })
+                .catch(() => {
+                    toastr.error("something went wrong");
+                });
+        });
 
-                    if( data){
-                        $('#image-properties .title').val( data.title);
-                        $('#image-properties .alt').val( data.alt);
-                        $('#image-properties .tags').val( data.tags);
-                    }
-                },
-                error: function (a, b, c){
-                    console.log( a)
-                },
-                data:{ language: language, file: file},
-                url : '/cms/image/data',
-                type : 'GET'
-            });
-        })
+        body.on('click', '.image.attributes.update', function (e) {
+            let filename    = this.dataset.id;
+            $('#mdl_attributes .filename').val( filename);
+            mdlAttributes.show();
+
+            // let alt         = $(document).find('.image.alt.' + filename).val();
+            // let title       = $('.image.title.' + filename).val();
+            // let tags        = $('.image.tags.' + filename).val();
+            // if( ! filename){
+            //     toastr.error('No filename provided');
+            // }
+            // $.ajax({
+            //     url : '/cms/image/attributes',
+            //     type : 'PATCH',
+            //     headers : {
+            //         'X-CSRF-Token' : "{{ csrf_token() }}"
+            //     },
+            //     dataType: 'json',
+            //     data: {
+            //         language: $('#language').val(),
+            //         filename: filename,
+            //         alt:alt,
+            //         title:title,
+            //         tags:tags,
+            //     },
+            //     success : function( data) {
+            //         toastr.success('Image attributes updated successfully');
+            //     },
+            //     error: function (a, b, c){
+            //         console.log( a)
+            //     }
+            // });
+        });
+
+        // $('.img').on('click', function (e) {
+        //     console.log(this.dataset.file);
+        //     file = this.dataset.file;
+        //     let language = $('#language').val();
+        //     $.ajax({
+        //         headers : {
+        //             'X-CSRF-Token' : "{{ csrf_token() }}"
+        //         },
+        //         success : function( data) {
+        //             $('#image-properties .title').val( '');
+        //             $('#image-properties .alt').val( '');
+        //             $('#image-properties .tags').val( '');
+
+        //             if( data){
+        //                 $('#image-properties .title').val( data.title);
+        //                 $('#image-properties .alt').val( data.alt);
+        //                 $('#image-properties .tags').val( data.tags);
+        //             }
+        //         },
+        //         error: function (a, b, c){
+        //             console.log( a)
+        //         },
+        //         data:{ language: language, file: file},
+        //         url : '/cms/image/data',
+        //         type : 'GET'
+        //     });
+        // })
         $('.image-data.apply').on('click', function (e) {
             let title = $('#image-properties .title').val();
             let alt = $('#image-properties .alt').val();

@@ -18,13 +18,19 @@ use khessels\cms\Controllers\Controller as ControllersController;
 
 class ContentController extends ControllersController
 {
-    public $acceptedImageFileExtensions = ["jpeg","jpg", "png", "gif", "webp", "pdf", "svg", "pdf"];
+    public $acceptedImageFileExtensions = null;
 
+    public function __construct()
+    {
+        $this->acceptedImageFileExtensions = config( 'cms.accepted_image_extensions');
+        // parent::__construct();
+        // $this->middleware('role:admin|developer');
+    }
     private function getResources( $request){
         $filters = $request->all();
 
-        $url = Storage::disk( config("cms.images_disks")[0])->url("");
-        $storageAllResources = Storage::disk( config("cms.images_disks")[0])
+        $url = Storage::disk( config( "cms.images_disks")[ 0])->url( "");
+        $storageAllResources = Storage::disk( config( "cms.images_disks")[ 0])
             ->allFiles();
 
         // iterate the images and create a list of resources
@@ -33,34 +39,21 @@ class ContentController extends ControllersController
             $filename = explode( '/', $resource);
             $filename = $filename[ count( $filename) - 1];
             $exploded = explode( '.', $filename);
-            if( strtolower( $exploded[ count( $exploded) -1]) !== 'json'){
+            if( in_array( strtolower( $exploded[ count( $exploded) -1]), $this->acceptedImageFileExtensions)){
                 $resource = [];
-                $resource['url'] = $url . $filename;
-                $resource['uri'] = $url;
-                $resource['filename'] = $filename;
-                $resource['disk'] = config("cms.images_disks")[0];
+                $resource[ 'url'] = $url . $filename;
+                $resource[ 'uri'] = $url;
+                $resource[ 'filename'] = $filename;
+                $resource[ 'disk'] = config( "cms.images_disks")[ 0];
+                if( array_search( $filename . '.json', $storageAllResources)){
+                    $resource[ 'data'] = json_decode( Storage::disk( config( "cms.images_disks")[ 0])->get( $filename . '.json'), true );
+                }
                 $resources[] = $resource;
             }
         }
-
-        // iterate the json partner files of the images and add the json data to the corresponding resource
-        foreach( $storageAllResources as $resource){
-            $filename = explode( '/', $resource);
-            $filename = $filename[ count( $filename) - 1];
-            $exploded = explode( '.', $filename);
-            if( strtolower( $exploded[ count( $exploded) -1]) === 'json'){
-                $resourceIndex = array_column( $resources, null, 'filename')[ $filename] ?? null;
-                if( ! empty( $resource)){
-                    $data = Storage::disk( config("cms.images_disks")[0])->get( $filename);
-                    if( ! empty( $data)){
-                        $resources[ $resourceIndex]['data'] = $data;
-                    }
-                }
-            }
-        }
-        // $data[ $file] = json_decode( Storage::disk( config( "cms.images_disks")[0])->get( $file));
         return $resources;
     }
+
     private function templateNames( $request){
         $templateNames = [];
         $directoryPath = resource_path( 'views') . '/templates';
@@ -70,6 +63,35 @@ class ContentController extends ControllersController
             $templateNames[] = explode( '.', substr( $fileName, 0, strlen( $directoryPath)))[ 0];
         }
         return $templateNames;
+    }
+    public function updateImageAttributes( Request $request){
+        $data       = $request->all();
+        $filename   = $data[ 'filename'];
+        $disk       = config( "cms.images_disks")[ 0];
+        $file       = Storage::disk( $disk)->get( $filename . '.json');
+
+        if( ! empty( $file)){
+            $json = json_decode( $file, true);
+        }else{
+            $json = [];
+        }
+        if( ! empty( $data[ 'title'])){
+                $json[ app()->getLocale() ][ 'title'] = $data[ 'title'];
+            }
+            if( ! empty( $data['alt'])){
+                $json[ app()->getLocale() ][ 'alt'] = $data[ 'alt'];
+            }
+            if( ! empty( $data['tags'])){
+                $json[ app()->getLocale() ][ 'tags'] = explode( ',', $data[ 'tags']);
+            }
+            Storage::disk( $disk)->put( $filename . '.json', json_encode( $json));
+
+
+        if ($request->wantsJson()) {
+           // Handle JSON response
+           return response()->json(['success' => true]);
+        }
+        return redirect()->back();
     }
     public function index( Request $request)
     {
@@ -100,23 +122,17 @@ class ContentController extends ControllersController
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
 
             // Move the image to the desired location
-            Storage::disk( config("cms.images_disks")[0])->putFileAs($data->directory, $image, $imageName);
+            Storage::disk( config( "cms.images_disks")[ 0])->putFileAs( $data->directory, $image, $imageName);
         }
         return response()->json(['success'=>`[]]`]);
     }
     public function getImageData( Request $request){
         $data = $request->all();
-        $url = $data['file'] . '.' . $data['language'] . ".json";
-        $data = json_decode( Storage::disk('public')->get( $url));
+        $url = $data[ 'file'] . '.' . $data[ 'language'] . ".json";
+        $data = json_decode( Storage::disk( 'public')->get( $url));
         return $data;
     }
 
-    public function setImageData( Request $request){
-        $all = $request->all();
-        $o = ['title' => $all['properties']['title'], 'alt' => $all['properties']['alt'], 'tags' =>  $all['properties']['tags']];
-        Storage::disk('public')->put( $all['properties']['file'] .  '.' . $all['properties']['language'] . ".json", json_encode($o));
-        return 'OK';
-    }
     public function createImagesDirectory( Request $request){
         Storage::disk('public')->makeDirectory($request->parent . '/' . $request->directory);
         return redirect()->back();
@@ -148,37 +164,6 @@ class ContentController extends ControllersController
         return redirect()->back();;
     }
 
-    // public function imageManagement(Request $request){
-    //     $directory = '';
-    //     if($request->has('directory')){
-    //         $directory = $request->get('directory');
-    //     }
-    //     $directories = Storage::disk('public')->allDirectories();
-    //     $files = Storage::disk('public')->files( $directory);
-    //     $arr = [];
-    //     $data = [];
-    //     foreach( $files as $file){
-    //         $extension =  pathinfo($file, PATHINFO_EXTENSION);
-    //         if( ! in_array($extension, [ 'gitignore'] )){
-    //             if( in_array( $extension, ['json'])){
-    //                 $data[ $file] = json_decode( Storage::disk('public')->get( $file));
-    //             }
-    //             if( in_array( $extension, $this->acceptedImageFileExtensions ) ){
-    //                 $arr[] = $file;
-    //             }
-    //         }
-    //     }
-    //     return view("package-views::image-management")
-    //         ->with( 'page', 'image-management')
-    //         ->with( 'files', $arr)
-    //         ->with( 'data', $data)
-    //         ->with( 'accepted_files', $this->acceptedImageFileExtensions)
-    //         ->with( 'directories', $directories)
-    //         ->with( 'directory', $directory);
-    // }
-
-
-
     public function getPageFromCMS($page){
         $pages = Cache::get('pages');
         foreach( $pages as $oPage){
@@ -194,7 +179,6 @@ class ContentController extends ControllersController
         }
         abort(404);
     }
-
 
     public function db_delete( Request $request ){
         if( $request->has('app')){
@@ -468,14 +452,24 @@ class ContentController extends ControllersController
         // iterate images, extract source, lookup image data for title and alt attributes
         $imgs = $node->getElementsByTagName("img");
         foreach($imgs as $index => $img){
-            $src = $imgs[ $index]->getAttribute('src');
-            // get json
-            $language = app()->getLocale();
-            $filename = substr( $src, strlen('/storage/')) . '.' . $language . '.json';
-            $data = json_decode( Storage::disk('public')->get( $filename), true);
+            $src        = $img->getAttribute('src');
+            $language   = app()->getLocale();
+            $exploded   = explode( '/', $src);
+            $filename   = $exploded[ count( $exploded) -1] . '.json';
+            $data       = json_decode( Storage::disk( config( "cms.images_disks")[ 0])->get( $filename), true );
+
             if( ! empty( $data)){
-                $imgs[ $index]->setAttribute('alt', $data['alt'] ?? '');
-                $imgs[ $index]->setAttribute('title', $data['alt'] ?? '');
+                if( ! empty( $data[ $language])){
+                    if( ! empty( $data[ $language]['title'])){
+                        $imgs[ $index]->setAttribute('title', $data[ $language]['title']);
+                    }
+                    if( ! empty( $data[ $language]['alt'])){
+                        $imgs[ $index]->setAttribute('alt', $data[ $language]['alt']);
+                    }
+                    if( ! empty( $data[ $language]['tags'])){
+                        $imgs[ $index]->setAttribute('data-tags', implode(',', $data[ $language]['tags']));
+                    }
+                }
             }
         }
         $fragment = $dom->saveHTML( $node );

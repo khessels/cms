@@ -19,10 +19,10 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
             });
 
             Route::group(['prefix' => 'image'], function () {
-                Route::get('/management', [ContentController::class, 'imageManagement'])->name('cms.image.management.get');
-                Route::post('/management', [ContentController::class, 'imageManagement'])->name('cms.image.management.post');
+                // Route::get('/management', [ContentController::class, 'imageManagement'])->name('cms.image.management.get');
+                // Route::post('/management', [ContentController::class, 'imageManagement'])->name('cms.image.management.post');
                 Route::post('/dropzone/store', [ContentController::class, 'store'])->name('cms.dropzone.store');
-                Route::post('/data', [ContentController::class, 'setImageData'])->name('cms.image.data.post');
+                Route::patch('/attributes', [ContentController::class, 'updateImageAttributes'])->name('cms.image.attributes.patch');
             });
 
             Route::group(['prefix' => 'collection'], function () {
