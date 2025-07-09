@@ -78,18 +78,27 @@ class ContentController extends ControllersController
         if( ! empty( $file)){
             $json = json_decode( $file, true);
         }
-
-        if( ! empty( $data[ 'title'])){
-            $json[ $language][ 'title'] = $data[ 'title'];
-        }
-        if( ! empty( $data['alt'])){
-            $json[ $language][ 'alt'] = $data[ 'alt'];
+        if( $language === 'all'){
+            foreach( config( 'cms.available_locales') as $lang){
+                if( ! empty( $data[ 'title'])){
+                    $json[ $lang][ 'title'] = $data[ 'title'];
+                }
+                if( ! empty( $data[ 'alt'])){
+                    $json[ $lang][ 'alt'] = $data[ 'alt'];
+                }
+            }
+        }else{
+            if( ! empty( $data[ 'title'])){
+                $json[ $language][ 'title'] = $data[ 'title'];
+            }
+            if( ! empty( $data['alt'])){
+                $json[ $language][ 'alt'] = $data[ 'alt'];
+            }
         }
         if( ! empty( $data['tags'])){
             $json[ 'tags'] = explode( ',', $data[ 'tags']);
         }
         Storage::disk( $disk)->put( $filename . '.json', json_encode( $json));
-
 
         if ($request->wantsJson()) {
            // Handle JSON response

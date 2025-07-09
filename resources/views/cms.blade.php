@@ -136,94 +136,127 @@
                         <hr>
                         <div class="row">
                             <div class="col-12">
-                                <div class="row">
-                                    <div class="col-4">
-                                        <select id="sel_actions">
-                                            <option value="" selected>{{__('Select')}}</option>
-                                            <option value="delete" >{{__('Delete')}}</option>
-                                            <option value="archive" >{{__('Archive')}}</option>
-                                        </select>
-                                        <button id="btn_action" type="button" class="btn btn-primary disabled">{{__('Apply')}}</button>
-                                    </div>
-                                    <div class="col-4">
-                                        <p><strong>Click on the image preview to copy the link</strong></p>
+                                <div class="container my-5">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button" role="tab" aria-controls="list" aria-selected="true">List</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="grid-tab" data-bs-toggle="tab" data-bs-target="#grid" type="button" role="tab" aria-controls="grid" aria-selected="false">Grid</button>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content mt-3" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <select id="sel_actions">
+                                                        <option value="" selected>{{__('Select')}}</option>
+                                                        <option value="delete" >{{__('Delete')}}</option>
+                                                        <option value="archive" >{{__('Archive')}}</option>
+                                                    </select>
+                                                    <button id="btn_action" type="button" class="btn btn-primary disabled">{{__('Apply')}}</button>
+                                                </div>
+                                                <div class="col-4">
+                                                    <p><strong>Click on the image preview to copy the link</strong></p>
+                                                </div>
+                                            </div>
+                                            <table id="tbl_resources" class="table table-striped" style="width:100%; font-size:80%">
+                                                <thead>
+                                                    <tr>
+                                                        <th><input type="checkbox" id="cb_select_all"> {{__('Select')}}</th>
+                                                        <th>{{__('Preview')}}</th>
+                                                        <th>{{__('Lang.')}}</th>
+                                                        <th>{{__('Alt')}}</th>
+                                                        <th>{{__('Title')}}</th>
+                                                        <th>{{__('Dimensions')}}</th>
+                                                        <th>{{__('Tags')}}</th>
+                                                        <th>{{__('Actions')}}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach( $resourceList as $resource)
+                                                        @php
+                                                            if( ! isset( $resource[ 'filename']) || ! isset( $resource[ 'url'])){
+                                                                continue;
+                                                            }
+                                                            $lang = app()->getLocale();
+                                                            foreach( config('cms.available_locales') as $locale){
+                                                                if( ! isset( $resource[ 'data'][ $locale])){
+                                                                    $resource[ 'data'][ $locale] = [];
+                                                                }
+                                                                if( ! isset( $resource[ 'data'][ $locale][ 'alt'])){
+                                                                    $resource[ 'data'][ $locale][ 'alt'] = '';
+                                                                }
+                                                                if( ! isset( $resource[ 'data'][ $locale][ 'title'])){
+                                                                    $resource[ 'data'][ $locale][ 'title'] = '';
+                                                                }
+                                                                if( ! isset( $resource[ 'data'][ 'tags'])){
+                                                                    $resource[ 'data'][ 'tags'] = [];
+                                                                }
+                                                                if( ! isset( $resource[ 'data'][ 'width']) ){
+                                                                    $resource[ 'data'][ 'width'] = 0;
+                                                                }
+                                                                if( ! isset( $resource[ 'data'][ 'height']) ){
+                                                                    $resource[ 'data'][ 'height'] = 0;
+                                                                }
+                                                            }
+                                                        @endphp
+                                                        <tr>
+                                                            <td><input type="checkbox" value="{{ $resource[ 'filename']}}" data-id="{{ $resource[ 'filename']}}"></td>
+                                                            <td><img data-id="{{ $resource[ 'filename']}}" data-src="{{ $resource[ 'url'] }}" class="resource img" style="height:40px" height="40px" src="{{ $resource[ 'url'] }}" alt="{{ $resource[ 'data'][ $lang][ 'alt'] ?? ''}}" title="{{ $resource[ 'data'][ $lang][ 'title'] ?? ''}}"></td>
+                                                            <td>
+                                                                @foreach( config('cms.available_locales') as $locale)
+                                                                    {{ $locale}} <br>
+                                                                @endforeach
+                                                            </td>
+                                                            <td>
+                                                                @foreach( config('cms.available_locales') as $locale)
+                                                                    {{ $resource[ 'data'][ $locale][ 'alt']}} <br>
+                                                                @endforeach
+                                                            </td>
+                                                            <td>
+                                                                @foreach( config('cms.available_locales') as $locale)
+                                                                    {{ $resource[ 'data'][ $locale][ 'title']}} <br>
+                                                                @endforeach
+                                                            </td>
+                                                            <td>
+                                                                {{ $resource[ 'data'][ 'height']}}, {{ $resource[ 'data'][ 'width']}}<br>
+                                                            </td>
+                                                            <td>{{ implode(',', $resource[ 'data'][ 'tags'])}}</td>
+                                                            <td>
+                                                                <a href="javascript:void(0)" class="image attributes update" data-id="{{ $resource[ 'filename']}}">Change</a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade" id="grid" role="tabpanel" aria-labelledby="grid-tab">
+                                            <div class="row" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
+                                                @foreach( $resourceList as $resource)
+                                                    <div class="col">
+                                                        <img data-id="{{ $resource[ 'filename']}}"
+                                                             data-src="{{ $resource[ 'url'] }}"
+                                                             class="resource img"
+                                                             style="height:40px"
+                                                             height="40px"
+                                                             src="{{ $resource[ 'url'] }}"
+                                                             alt="{{ $resource[ 'data'][ $lang][ 'alt'] ?? ''}}"
+                                                             title="{{ $resource[ 'data'][ $lang][ 'title'] ?? ''}}">
+                                                        {{-- <img style="width:100px;" src="{{ $url }}" alt="" class="img" data-directory="{{ $directory }}" data-file="{{ $file }}" data-url="{{ $url }}"/><br> --}}
+                                                        {{-- <input type="checkbox" name=selected_images[] value="{{ $resource[ 'filename'] }}"> --}}
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <table id="tbl_resources" class="table table-striped" style="width:100%; font-size:80%">
-                                    <thead>
-                                        <tr>
-                                            <th><input type="checkbox" id="cb_select_all"> {{__('Select')}}</th>
-                                            <th>{{__('Preview')}}</th>
-                                            <th>{{__('Lang.')}}</th>
-                                            <th>{{__('Alt')}}</th>
-                                            <th>{{__('Title')}}</th>
-                                            <th>{{__('Dimensions')}}</th>
-                                            <th>{{__('Tags')}}</th>
-                                            <th>{{__('Actions')}}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach( $resourceList as $resource)
-                                            @php
-                                                if( ! isset( $resource[ 'filename']) || ! isset( $resource[ 'url'])){
-                                                    continue;
-                                                }
-                                                $lang = app()->getLocale();
-                                                foreach( config('cms.available_locales') as $locale){
-                                                    if( ! isset( $resource[ 'data'][ $locale])){
-                                                        $resource[ 'data'][ $locale] = [];
-                                                    }
-                                                    if( ! isset( $resource[ 'data'][ $locale][ 'alt'])){
-                                                        $resource[ 'data'][ $locale][ 'alt'] = '';
-                                                    }
-                                                    if( ! isset( $resource[ 'data'][ $locale][ 'title'])){
-                                                        $resource[ 'data'][ $locale][ 'title'] = '';
-                                                    }
-                                                    if( ! isset( $resource[ 'data'][ 'tags'])){
-                                                        $resource[ 'data'][ 'tags'] = [];
-                                                    }
-                                                    if( ! isset( $resource[ 'data'][ 'width']) ){
-                                                        $resource[ 'data'][ 'width'] = 0;
-                                                    }
-                                                    if( ! isset( $resource[ 'data'][ 'height']) ){
-                                                        $resource[ 'data'][ 'height'] = 0;
-                                                    }
-                                                }
-                                            @endphp
-                                            <tr>
-                                                <td><input type="checkbox" value="{{ $resource[ 'filename']}}" data-id="{{ $resource[ 'filename']}}"></td>
-                                                <td><img data-id="{{ $resource[ 'filename']}}" data-src="{{ $resource[ 'url'] }}" class="resource img" style="height:40px" height="40px" src="{{ $resource[ 'url'] }}" alt="{{ $resource[ 'data'][ $lang][ 'alt'] ?? ''}}" title="{{ $resource[ 'data'][ $lang][ 'title'] ?? ''}}"></td>
-                                                <td>
-                                                    @foreach( config('cms.available_locales') as $locale)
-                                                        {{ $locale}} <br>
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach( config('cms.available_locales') as $locale)
-                                                        {{ $resource[ 'data'][ $locale][ 'alt']}} <br>
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    @foreach( config('cms.available_locales') as $locale)
-                                                        {{ $resource[ 'data'][ $locale][ 'title']}} <br>
-                                                    @endforeach
-                                                </td>
-                                                <td>
-                                                    {{ $resource[ 'data'][ 'height']}}, {{ $resource[ 'data'][ 'width']}}<br>
-                                                </td>
-                                                <td>{{ implode(',', $resource[ 'data'][ 'tags'])}}</td>
-                                                <td>
-                                                    <a href="javascript:void(0)" class="image attributes update" data-id="{{ $resource[ 'filename']}}">Change</a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <form action="/cms/image/management" method="POST">
+                                {{-- <form action="/cms/image/management" method="POST">
                                     @csrf
                                     <h4>Image Directory</h4>
                                     <select class="form-select" name="directory" id="selDirectory" onchange="this.form.submit()">
@@ -238,12 +271,12 @@
                                             <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
                                         @endforeach
                                     </select>
-                                </form>
+                                </form> --}}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <form action="/cms/images/directory" method="POST">
+                                {{-- <form action="/cms/images/directory" method="POST">
                                     @csrf
                                     <input type="hidden" name="directory" value="{{ $directory }}">
                                     <input type="hidden" name="_method" value="DELETE">
@@ -273,73 +306,13 @@
                                     </select>
                                     <input class="form-control" type="text" name="directory">
                                     <input type="submit" class="btn btn-primary" value="Create directory">
-                                </form>
+                                </form> --}}
 
                             </div>
                             <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
                                 <div>
-
-                                    <table id="image-properties">
-                                        <tr>
-                                            <td>
-                                                Language
-                                            </td>
-                                            <td>
-                                                <form action="{{ route('post.language.switch') }}" method="POST">
-                                                    <input type="hidden" name="directory" value="{{ $directory }}">
-                                                    @csrf
-                                                    <select name="language" id="language" class="form-select" onchange="this.form.submit()">
-                                                        @foreach( config('cms.available_locales') as $locale)
-                                                            @php
-                                                                $selected = '';
-                                                                if( app()->getLocale() === $locale){
-                                                                    $selected = 'selected';
-                                                                }
-                                                            @endphp
-                                                            <option value="{{ $locale }}" {{ $selected }}>@c(['key' => $locale, 'collection' =>false ])</option>
-                                                        @endforeach
-                                                    </select>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Title
-                                            </td>
-                                            <td>
-                                                <input class="form-control title">
-                                                <input type="hidden" class="file" value="">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Alt
-                                            </td>
-                                            <td>
-                                                <input class="form-control alt">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Tags
-                                            </td>
-                                            <td>
-                                                <input class="form-control tags">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Apply
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-primary image-data apply">Apply</button>
-                                            </td>
-                                        </tr>
-                                    </table>
                                 </div>
                                 <div>
-
-
                                 </div>
                             </div>
                         </div>
@@ -352,19 +325,7 @@
             </div>
 
         </div>
-    {{-- <div class="grid-masonry" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
-            @foreach( $files as $file)
-                @php
-                    $url = "/storage/images/" . $file;
 
-                @endphp
-                <div class="grid-item">
-                    <img style="width:100px;" src="{{ $url }}" alt="" class="img" data-directory="{{ $directory }}" data-file="{{ $file }}" data-url="{{ $url }}"/><br>
-                    <input type="checkbox" name=selected_images[] value="{{ $file }}">
-                </div>
-
-            @endforeach
-        </div> --}}
         <div id="mdl_add_page" class="modal" tabindex="-1">
             <div class="modal-dialog">
                 <form method="POST" action="/cms/page/add">
@@ -519,6 +480,7 @@
                                     </td>
                                     <td>
                                          <select name="language">
+                                            <option value="all" selected>All languages</option>
                                             @foreach( config('cms.available_locales') as $locale)
                                                 @php
                                                     $selected = '';
@@ -528,6 +490,7 @@
                                                 @endphp
                                                 <option value="{{ $locale }}" {{ $selected }}>@c(['key' => $locale, 'default' => $locale ])</option>
                                             @endforeach
+
                                         </select>
                                     </td>
                                     <td>
@@ -586,6 +549,7 @@
 @endsection
 
 @section('footer-js')
+{{-- <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script> --}}
     <script>
         let app = '{{ config('cms.app')}}'
         let body = $('body');
@@ -748,11 +712,11 @@
         })
 
         $(function () {
-            let masonry = $('.grid-masonry').masonry({
-                // options...
-                itemSelector: '.grid-item',
-                columnWidth: 200
-            });
+            // let masonry = $('.grid-masonry').masonry({
+            //     // options...
+            //     itemSelector: '.grid-item',
+            //     columnWidth: 200
+            // });
         });
     </script>
 @endsection
