@@ -385,7 +385,8 @@ class ContentController extends ControllersController
             'Authentication' => 'bearer ' . config('cms.token'),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'x-app' => config('cms.app')
+            'x-app' => config('cms.app'),
+            'x-dev' => config('cms.dev'),
         ])->get(config('cms.domain') . '/api/management/content' . $parm);
         $tags = $response->json();
         $items = [];
