@@ -10,8 +10,10 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
     });
 
     Route::group(['middleware' => [ 'role:admin|developer']], function () {
-        Route::get('cms', [ContentController::class, 'index'])->name('cms');
+
         Route::group(['prefix' => 'cms'], function () {
+            Route::get('/', [ContentController::class, 'index'])->name('cms');
+
             Route::group(['prefix' => 'images'], function () {
                 Route::delete('/', [ContentController::class, 'removeImages'])->name('cms.images.delete');
                 Route::post('/action', [ContentController::class, 'imagesAction'])->name('cms.images.action');
@@ -46,6 +48,7 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
             Route::get('/', [ContentController::class, 'index'])->name('cms.index');
             Route::get('/enable', [ContentController::class, 'cms_enable'])->name('cms.enable');
             Route::get('/disable', [ContentController::class, 'cms_disable'])->name('cms.disable');
+            Route::post('/test/communication', [ContentController::class, 'testEndpoint'])->name('cms.endpoint.test');
 
         });
     });

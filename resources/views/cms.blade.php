@@ -1,6 +1,7 @@
 @extends('package-views::layouts.cms')
 
 @section('main')
+
     <div class="container">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -64,6 +65,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="card" >
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: darkred">Test communication with server</h5>
+                                <form action="/cms/test/communication" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="app" value="{{ config('cms.app')}}">
+                                    <input class="btn btn-warning" type="submit" value="Test Communication">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="tab-pane fade" id="pages" role="tabpanel" aria-labelledby="pages-tab">
@@ -111,7 +124,7 @@
                                             <td>{{ $page['expire_at'] ?? ''}}</td>
                                             <td>{{ $page['last_seen_at'] ?? ''}}</td>
                                             <td>{{ $page['status'] ?? ''}}</td>
-                                            <td><a class="page remove" href="javascript:void( 0)" data-id="{{ $page['id'] }}">Remove</a></td>
+                                            <td><a class="page remove" href="javascript:void( 0)" data-id="{{ $page['id'] ?? ''}}">Remove</a></td>
                                         </tr>
                                     @endforeach
                                 @endif
