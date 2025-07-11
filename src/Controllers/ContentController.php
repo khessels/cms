@@ -108,15 +108,18 @@ class ContentController extends ControllersController
     }
     public function index( Request $request)
     {
+        error_log("1");
         $resources = $this->getResources( $request);
+        error_log("2");
         $templateNames = $this->templateNames( $request);
-
+        error_log("3");
         $directory = '';
         if( $request->has( 'directory')){
             $directory = $request->get( 'directory');
         }
+        error_log("4");
         $directories = Storage::disk( config( "cms.images_disks")[ 0])->allDirectories();
-
+        error_log("5");
         return view( 'package-views::cms')
             ->with( 'template_pages', $templateNames)
             ->with( 'resourceList', $resources)
