@@ -20,11 +20,13 @@ abstract class Controller
 
         return $files;
     }
-    public function alertNotification( $message = 'Success', $class = 'success', $disappear = 3000){
+
+    public function alertNotification( $message = 'Success', $class = 'primary', $disappear = 3000){
         Session::flash('alert-message', $message);
         Session::flash('alert-timeout', $disappear);
         Session::flash('alert-class', 'alert-' . $class);
     }
+
     public function criticalException($request, $e, $file, $function, $line, $payload = null): void
     {
         if(!empty($e)){

@@ -69,11 +69,9 @@
                         <div class="card" >
                             <div class="card-body">
                                 <h5 class="card-title" style="color: darkred">Test communication with server</h5>
-                                <form action="/cms/test/communication" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="app" value="{{ config('cms.app')}}">
-                                    <input class="btn btn-warning" type="submit" value="Test Communication">
-                                </form>
+                                <input type="hidden" name="app" value="{{ config('cms.app')}}">
+                                <input class="btn btn-warning test communication" value="Test Communication"><br>
+                                <p class='result test communication'></p>
                             </div>
                         </div>
                     </div>
@@ -575,6 +573,32 @@
             mdlAddPage.show();
         })
 
+        body.on( 'click', '.btn.test.communication', function( e){
+            e.preventDefault();
+            $.ajax({
+                url: '/cms/test/communication',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function( response){
+                    if( response.success){
+                        $('.result.test.communication').html( response.success)
+                        toastr.success( response.success);
+                    }else if( response.error){
+                        $('.result.test.communication').html( response.error)
+                        toastr.error( response.error);
+                    }else{
+                        $('.result.test.communication').html( 'Unknown response');
+                        toastr.warning( 'Unknown response.');
+                    }
+
+                },
+                error: function( response){
+                    toastr.error('Error communicating with server');
+                }
+            });
+        });
         body.on( 'click', '.page.remove', function( e){
             //let id = $(this).data('id');
             let page = $(this).parents('tr').find('td:nth-child(3)').text();

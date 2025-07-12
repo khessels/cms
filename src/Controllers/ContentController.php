@@ -212,31 +212,27 @@ class ContentController extends ControllersController
     }
 
     public function testEndpoint( Request $request){
-        $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('cms.token'),
+        $response = Http::withToken( config('cms.token'))->withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
             'x-dev' => config('cms.dev'),
             'x-app' => config('cms.app')
         ])->post(config('cms.domain') . '/api/helo');
+        $responseData = $response->json();
         if ($response->successful()) {
-            $this->alertNotification( 'Endpoint is reachable: ' . $response->body(), 'success');
-            return redirect()->route('cms.index');
+            return response()->json(['success' => 'Endpoint is reachable: ' . $response->body()]);
         } elseif ($response->clientError()) {
-            $this->alertNotification( 'Client error occurred.', 'error');
-            return redirect()->route('cms.index');
+            return response()->json(['error' => 'Client error: ' . $responseData['message'] ?? '']);
+
         } elseif ($response->serverError()) {
-            $this->alertNotification( 'Server error occurred.' , 'error');
-            return redirect()->route('cms.index');
+            return response()->json(['error' => 'Server error:' . $responseData['message'] ?? '']);
         }
-        $this->alertNotification( 'Unexpected error occurred.', 'error');
-        return redirect()->route('cms.index');
+        return response()->json(['error' => 'Unknown.']);
     }
 
     public function db_delete( Request $request ){
         if( $request->has('app')){
-            $r = Http::withHeaders([
-                'Authentication' => 'bearer ' . config('cms.token'),
+            $r = Http::withToken( config('cms.token'))->withHeaders([
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 'x-dev' => config('cms.dev'),
@@ -267,8 +263,7 @@ class ContentController extends ControllersController
                 $strElement = is_null($all['value']) ? $item['default'] : $all['value'];
                 $url = config('cms.domain') . '/api/tag/direct/' . $app . '/' . $id;
 
-                $response = Http::withHeaders([
-                    'Authentication' => 'bearer ' . config('cms.token'),
+                $response = Http::withToken( config('cms.token'))->withHeaders([
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                     'x-dev' => config('cms.dev'),
@@ -336,8 +331,7 @@ class ContentController extends ControllersController
         }
         $data = Cache::get('cms.collection');
         if( ! empty( $data)){
-            $r = Http::withHeaders([
-                'Authentication' => 'bearer ' . config('cms.token'),
+            $r = Http::withToken( config('cms.token'))->withHeaders([
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 'x-dev' => config('cms.dev'),
@@ -401,8 +395,7 @@ class ContentController extends ControllersController
             }
         }
 
-        $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('cms.token'),
+        $response = Http::withToken( config('cms.token'))->withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
             'x-app' => config('cms.app'),
@@ -608,8 +601,7 @@ class ContentController extends ControllersController
         return '';
     }
     public static function _retrievePages( ){
-        $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('cms.token'),
+        $response = Http::withToken( config('cms.token'))->withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
             'x-app' => config('cms.app')
@@ -623,8 +615,7 @@ class ContentController extends ControllersController
         if( empty( $page)){
             $page = $request->get('page');
         }
-        $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('cms.token'),
+        $response = Http::withToken( config('cms.token'))->withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
             'x-dev' => config('cms.dev'),
@@ -642,8 +633,7 @@ class ContentController extends ControllersController
                 $all[ 'properties'][ 'urls'] = [ $all[ 'page']];
             }
         }
-        $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('cms.token'),
+        $response = Http::withToken( config('cms.token'))->withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
             'x-dev' => config('cms.dev'),
@@ -652,8 +642,7 @@ class ContentController extends ControllersController
         return redirect('/cms');
     }
     public function getPage( Request $request, $page ){
-        $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('cms.token'),
+        $response = Http::withToken( config('cms.token'))->withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
             'x-app' => config('cms.app')
@@ -661,8 +650,7 @@ class ContentController extends ControllersController
         return 'OK';
     }
     public function setPageActiveState( Request $request, $page, $status = 'ACTIVE' ){
-        $response = Http::withHeaders([
-            'Authentication' => 'bearer ' . config('cms.token'),
+        $response = Http::withToken( config('cms.token'))->withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
             'x-dev' => config('cms.dev'),
