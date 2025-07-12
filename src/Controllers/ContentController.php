@@ -220,14 +220,14 @@ class ContentController extends ControllersController
         ])->post(config('cms.domain') . '/api/helo');
         $responseData = $response->json();
         if ($response->successful()) {
-            return response()->json(['success' => 'Endpoint is reachable: ' . $response->body()]);
+            return response('Endpoint is reachable: ' . $response->body());
         } elseif ($response->clientError()) {
-            return response()->json(['error' => 'Client error: ' . $responseData['message'] ?? '']);
+            return response('Client error: ' . $responseData['message'] ?? '', 300);
 
         } elseif ($response->serverError()) {
-            return response()->json(['error' => 'Server error:' . $responseData['message'] ?? '']);
+            return response('Client error: ' . $responseData['message'] ?? '', 400);
         }
-        return response()->json(['error' => 'Unknown.']);
+        return response('Unknown Error', 500);
     }
 
     public function db_delete( Request $request ){

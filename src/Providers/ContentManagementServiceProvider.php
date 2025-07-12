@@ -7,13 +7,15 @@ use Illuminate\Routing\Router;
 use khessels\cms\Middleware\Language;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Http\Kernel;
+use khessels\responseformat\Middleware\ResponseFormat;
 
 class ContentManagementServiceProvider extends ServiceProvider
 {
     public function boot( Router $router, Kernel $kernel)
     {
         // Optional: Register routes, views, etc.
-        $router->aliasMiddleware('language', Language::class);
+        $router->aliasMiddleware( 'language', Language::class);
+        $router->aliasMiddleware( 'ResponseFormat', ResponseFormat::class );
 
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
 
@@ -28,6 +30,14 @@ class ContentManagementServiceProvider extends ServiceProvider
             __DIR__ . '/../../resources/views/templates' => resource_path('views') . '/templates',
             __DIR__ . '/../../resources/views/modals' => resource_path('views') . '/partials/cms-modals',
         ]);
+
+        // Register the package's middleware
+
+        // $this->app->make('router')->pushMiddlewareToGroup('web', 'ResponseFormat');
+        // // $this->app->booted(function () {
+        // //     $this->app->make('router')->pushMiddlewareToGroup('web', khessels\responseformat\Middleware\ResponseFormat::class);
+        // // });
+        // $this->app->make('router')->aliasMiddleware('ResponseFormat', 'khessels\responseformat\Middleware\ResponseFormat');
 
     }
 

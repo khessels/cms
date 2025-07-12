@@ -15,11 +15,21 @@
             "homepage": "https://khessels.com/"
         }
     ],
-
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/khessels/cms.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/khessels/responseformat.git"
+        }
+    ],
     "minimum-stability": "dev",
         "require": {
         "php": "^8.4",
-        "illuminate/support": "^12.17"
+        "illuminate/support": "^12.17",
+        "khessels/responseformat": "*"
     },
     "prefer-stable": true,
     "config": {

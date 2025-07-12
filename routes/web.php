@@ -48,7 +48,7 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
             Route::get('/', [ContentController::class, 'index'])->name('cms.index');
             Route::get('/enable', [ContentController::class, 'cms_enable'])->name('cms.enable');
             Route::get('/disable', [ContentController::class, 'cms_disable'])->name('cms.disable');
-            Route::post('/test/communication', [ContentController::class, 'testEndpoint'])->name('cms.endpoint.test');
+            Route::post('/test/communication', [ContentController::class, 'testEndpoint'])->name('cms.endpoint.test')->middleware(['ResponseFormat:default']);
 
         });
     });

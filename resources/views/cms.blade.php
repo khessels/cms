@@ -582,17 +582,19 @@
                     _token: '{{ csrf_token() }}',
                 },
                 success: function( response){
-                    if( response.success){
-                        $('.result.test.communication').html( response.success)
-                        toastr.success( response.success);
-                    }else if( response.error){
-                        $('.result.test.communication').html( response.error)
-                        toastr.error( response.error);
+                    if( response.status == 200){
+                        $('.result.test.communication').html( response.data)
+                        toastr.success( response.data);
+                    }else if( response.status == 300){
+                        $('.result.test.communication').html( response.data)
+                        toastr.warning( response.data);
+                    }else if( response.status == 400){
+                        $('.result.test.communication').html( response.data)
+                        toastr.error( response.data);
                     }else{
-                        $('.result.test.communication').html( 'Unknown response');
-                        toastr.warning( 'Unknown response.');
+                        $('.result.test.communication').html( response.data)
+                        toastr.error( response.data);
                     }
-
                 },
                 error: function( response){
                     toastr.error('Error communicating with server');
