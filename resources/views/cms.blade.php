@@ -47,6 +47,7 @@
                         <div class="card" >
                             <div class="card-body">
                                 <h5 class="card-title">In-Page content editor</h5>
+                                <p style="font-size:70%">(for the editor to work, Remember the page tags have to be submittted in the server and the resource files have to be loaded from the server. i.e. collect, upload and reload)</p>
                                 <a href="/cms/enable">Enable</a><br>
                                 <a href="/cms/disable">Disable</a><br>
                             </div>
