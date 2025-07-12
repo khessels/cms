@@ -13,9 +13,9 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="images-tab" data-bs-toggle="tab" data-bs-target="#images" type="button" role="tab" aria-controls="images" aria-selected="false">Images</button>
             </li>
-            <li class="nav-item" role="presentation">
+            {{-- <li class="nav-item" role="presentation">
                 <button class="nav-link" id="api-tab" data-bs-toggle="tab" data-bs-target="#api" type="button" role="tab" aria-controls="api" aria-selected="false">API</button>
-            </li>
+            </li> --}}
         </ul>
         <div class="tab-content mt-3" id="myTabContent">
             <div class="tab-pane fade show active" id="content" role="tabpanel" aria-labelledby="content-tab">
@@ -331,9 +331,9 @@
 
                 </div>
             </div>
-            <div class="tab-pane fade" id="api" role="tabpanel" aria-labelledby="api-tab">
+            {{-- <div class="tab-pane fade" id="api" role="tabpanel" aria-labelledby="api-tab">
 
-            </div>
+            </div> --}}
 
         </div>
 
