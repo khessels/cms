@@ -26,6 +26,50 @@ class ContentController extends ControllersController
         // parent::__construct();
         // $this->middleware('role:admin|developer');
     }
+
+    public function createImagesDirectory( Request $request){
+        $directory = $request->get( 'directory');
+        if( ! empty( $directory)){
+            Storage::disk( config( "cms.images_disks")[ 0])->makeDirectory( $directory);
+        }
+        if ($request->wantsJson()) {
+           // Handle JSON response
+           return response()->json(['success' => true]);
+        }
+        return redirect()->back();
+    }
+
+    public function deleteImagesDirectory( Request $request){
+        $directory = $request->get( 'directory');
+        if( ! empty( $directory)){
+            Storage::disk( config( "cms.images_disks")[ 0])->deleteDirectory( $directory);
+        }
+        if ($request->wantsJson()) {
+           // Handle JSON response
+           return response()->json(['success' => true]);
+        }
+        return redirect()->back();
+    }
+    public function setImagesDirectory( Request $request){
+        $directory = $request->get( 'directory');
+        if( ! empty( $directory)){
+            Session::put( 'cms.images.directory', $directory);
+        }
+        if ($request->wantsJson()) {
+           // Handle JSON response
+           return response()->json(['success' => true]);
+        }
+        return redirect()->back();
+    }
+    public function getImagesDirectories( Request $request){
+        $directories = Storage::disk( config( "cms.images_disks")[ 0])->allDirectories();
+        if ($request->wantsJson()) {
+           // Handle JSON response
+           return response()->json(['directories' => $directories]);
+        }
+        return redirect()->back();
+    }
+
     private function getResources( $request){
         $filters = $request->all();
 
@@ -137,22 +181,7 @@ class ContentController extends ControllersController
         }
         return response()->json(['success'=>`[]]`]);
     }
-    // public function getImageData( Request $request){
-    //     $data = $request->all();
-    //     $url = $data[ 'file'] . '.' . $data[ 'language'] . ".json";
-    //     $data = json_decode( Storage::disk( 'public')->get( $url));
-    //     return $data;
-    // }
 
-    // public function createImagesDirectory( Request $request){
-    //     Storage::disk('public')->makeDirectory($request->parent . '/' . $request->directory);
-    //     return redirect()->back();
-    // }
-
-    // public function deleteImagesDirectory( Request $request){
-    //     Storage::disk('public')->deleteDirectory($request->directory);
-    //     return redirect()->back();
-    // }
     public function removeImages( Request $request){
         $ids = explode(',', $request->query( 'ids'));
         $storageAllResources = Storage::disk( config( "cms.images_disks")[ 0])

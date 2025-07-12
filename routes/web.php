@@ -19,6 +19,8 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
                 Route::post('/action', [ContentController::class, 'imagesAction'])->name('cms.images.action');
                 Route::post('/directory', [ContentController::class, 'createImagesDirectory'])->name('cms.images.directory.create');
                 Route::delete('/directory', [ContentController::class, 'deleteImagesDirectory'])->name('cms.images.directory.delete');
+                Route::post('/directory/set', [ContentController::class, 'setImagesDirectory'])->name('cms.images.directory.set');
+                Route::get('/directories', [ContentController::class, 'getImagesDirectories'])->name('cms.images.directories.get');
             });
 
             Route::group(['prefix' => 'image'], function () {
