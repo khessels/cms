@@ -36,7 +36,7 @@ class ContentController extends ControllersController
            // Handle JSON response
            return response()->json(['success' => true]);
         }
-        return redirect()->back();
+        return redirect('/cms#images_tab');
     }
 
     public function deleteImagesDirectory( Request $request){
@@ -48,7 +48,7 @@ class ContentController extends ControllersController
            // Handle JSON response
            return response()->json(['success' => true]);
         }
-        return redirect()->back();
+        return redirect('/cms#images_tab');
     }
     public function setImagesDirectory( Request $request){
         $directory = $request->get( 'directory');
@@ -59,7 +59,7 @@ class ContentController extends ControllersController
            // Handle JSON response
            return response()->json(['success' => true]);
         }
-        return redirect()->back();
+        return redirect('/cms#images_tab');
     }
     public function getImagesDirectories( Request $request){
         $directories = Storage::disk( config( "cms.images_disks")[ 0])->allDirectories();
@@ -67,7 +67,7 @@ class ContentController extends ControllersController
            // Handle JSON response
            return response()->json(['directories' => $directories]);
         }
-        return redirect()->back();
+        return redirect('/cms#images_tab');
     }
 
     private function getResources( $request, $directory){
@@ -149,7 +149,7 @@ class ContentController extends ControllersController
            // Handle JSON response
            return response()->json(['success' => true]);
         }
-        return redirect()->back();
+        return redirect('/cms#content_tab');
     }
     public function index( Request $request)
     {
@@ -202,7 +202,7 @@ class ContentController extends ControllersController
            // Handle JSON response
            return response()->json(['success' => true]);
         }
-        return redirect()->back();
+        return redirect('/cms#images_tab');
     }
     public function moveImages( Request $request){
         foreach( $request->ids as $image){
@@ -215,7 +215,7 @@ class ContentController extends ControllersController
            // Handle JSON response
            return response()->json(['success' => true]);
         }
-        return redirect()->back();
+        return redirect('/cms#images_tab');
     }
 
     public function getPageFromCMS($page){
@@ -261,8 +261,8 @@ class ContentController extends ControllersController
                 'x-app' => config('cms.app')
             ])->delete(config('cms.domain') . '/api/database');
             $this->alertNotification('Database has been deleted !!!', 'warning');
-            return redirect()->route('cms.index');
         }
+        return redirect('/cms#content_tab');
     }
     function setInnerHTML($element, $html)
     {
@@ -311,40 +311,40 @@ class ContentController extends ControllersController
         // disable content tag collection
         Session::put('cms.enable', true);
         $this->alertNotification('CMS Enabled.');
-        return redirect()->back();
+        return redirect('/cms#content_tab');
     }
 
     public function cms_disable( Request $request){
         // disable content tag collection
         Session::put('cms.enable', false);
         $this->alertNotification('CMS Disabled.');
-        return redirect()->back();
+        return redirect('/cms#content_tab');
     }
 
     public function artisan_optimize( Request $request){
         // run artisan optimize so that tag changes will be propagated
         Artisan::call('optimize', ['--quiet' => true]);
         $this->alertNotification('Artisan optimized.');
-        return redirect()->back();
+        return redirect('/cms#content_tab');
     }
 
     public function collection_enable( Request $request, $language = '*'){
         // enable content tag collection
         Session::put('cms.collection.enabled', true);
         $this->alertNotification('CMS Tag collection started');
-        return redirect()->back();
+        return redirect('/cms#content_tab');
     }
     public function collection_disable( Request $request){
         // disable content tag collection
         Session::put('cms.collection.enabled', false);
         $this->alertNotification('CMS Tag collection stopped', 'warning');
-        return redirect()->back();
+        return redirect('/cms#content_tab');
     }
     public function collection_delete( Request $request, $language = '*'){
         // delete tag collection
         Cache::delete('cms.collection');
         $this->alertNotification('CMS Tag collection deleted', 'warning');
-        return redirect()->back();
+        return redirect('/cms#content_tab');
     }
     public function collection_upload( Request $request, $language = '*'){
         $lang = Lang::locale();
@@ -365,7 +365,7 @@ class ContentController extends ControllersController
             Session::put('cms.collection.enabled', false);
         }
         $this->alertNotification('CMS Tag collection uploaded !! Collection stopped', 'error');
-        return redirect()->back();
+        return redirect('/cms#content_tab');
     }
     public function collection_reset( Request $request, $language = '*'){
         $lang = Lang::locale();
@@ -383,7 +383,7 @@ class ContentController extends ControllersController
             }
         }
         $this->alertNotification('CMS Tag collection reset');
-        return redirect()->back();
+        return redirect('/cms#content_tab');
     }
     public function collection_reload( Request $request, $language = '*'){
         $lang = Lang::locale();
@@ -405,7 +405,7 @@ class ContentController extends ControllersController
         $o->retrieveContent( $lang);
         $this->alertNotification('CMS Tag collection reloaded');
 
-        return redirect()->back();
+        return redirect('/cms#content_tab');
     }
 
     public function retrieveContent( $language)
@@ -630,7 +630,7 @@ class ContentController extends ControllersController
         ])->get(config('cms.domain') . '/api/page/list/ACTIVE');
         $pages = $response->json();
         Cache::set('pages', $pages);
-        return redirect('/cms');
+        return redirect('/cms#pages_tab');
     }
 
     public function deletePage( Request $request, $page = null ){
@@ -643,7 +643,7 @@ class ContentController extends ControllersController
             'x-dev' => config('cms.dev'),
             'x-app' => config('cms.app')
         ])->delete(config('cms.domain') . '/api/page/' . $page);
-        return redirect('/cms');
+        return redirect('/cms#pages_tab');
     }
     public function addPage( Request $request ){
         $all = $request->all();
@@ -661,7 +661,7 @@ class ContentController extends ControllersController
             'x-dev' => config('cms.dev'),
             'x-app' => config('cms.app')
         ])->post(config('cms.domain') . '/api/page', $all);
-        return redirect('/cms');
+        return redirect('/cms#pages_tab');
     }
     public function getPage( Request $request, $page ){
         $response = Http::withToken( config('cms.token'))->withHeaders([
@@ -683,6 +683,6 @@ class ContentController extends ControllersController
 
     public function clearPageCache( Request $request){
         Cache::clear('pages');
-        return redirect('/cms');
+        return redirect('/cms#pages_tab');
     }
 }

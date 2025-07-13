@@ -5,13 +5,14 @@
     <div class="container">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button" role="tab" aria-controls="content" aria-selected="true">Content</button>
+                <a href="#content_tab" class="nav-link active" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button" role="tab" aria-controls="content" aria-selected="true">Content</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pages-tab" data-bs-toggle="tab" data-bs-target="#pages" type="button" role="tab" aria-controls="pages" aria-selected="false">Pages</button>
+                <a href="#pages_tab" class="nav-link" id="pages-tab" data-bs-toggle="tab" data-bs-target="#pages" type="button" role="tab" aria-controls="pages" aria-selected="false">Pages</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="images-tab" data-bs-toggle="tab" data-bs-target="#images" type="button" role="tab" aria-controls="images" aria-selected="false">Images</button>
+                {{-- <button class="nav-link" id="images-tab" data-bs-toggle="tab" data-bs-target="#images" type="button" role="tab" aria-controls="images" aria-selected="false">Images</button> --}}
+                <a href="#images_tab" class="nav-link" id="images-tab" data-bs-toggle="tab" data-bs-target="#images" type="button" role="tab" aria-controls="images" aria-selected="false">Images</a>
             </li>
             {{-- <li class="nav-item" role="presentation">
                 <button class="nav-link" id="api-tab" data-bs-toggle="tab" data-bs-target="#api" type="button" role="tab" aria-controls="api" aria-selected="false">API</button>
@@ -32,7 +33,7 @@
                     <div class="col-md-4">
                         <div class="card" >
                             <div class="card-body">
-                                <h5 class="card-title">Collection operations</h5>
+                                <h5 class="card-title">Content operations</h5>
                                 <a href="/cms/collection/reset">Reset</a><br>
                                 <a href="/cms/collection/reload">Reload</a><br>
                                 <a href="/cms/collection/upload">Upload</a><br>
@@ -628,6 +629,12 @@
     <script>
         let app = '{{ config('cms.app')}}'
         let body = $('body');
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const trigger = document.querySelector(`ul.nav a[href="${window.location.hash}"]`)
+            const tab = new bootstrap.Tab(trigger)
+            tab.show()
+        })
 
         let mdlAddPage = new bootstrap.Modal(document.getElementById("mdl_add_page"), {});
         let table = new DataTable('#tbl_pages');
