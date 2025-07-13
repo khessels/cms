@@ -5,9 +5,10 @@ namespace khessels\cms\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
 use khessels\cms\Middleware\Language;
+use khessels\cms\Middleware\ResponseFormat;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Http\Kernel;
-use khessels\cms\Middleware\ResponseFormat;
+
 
 class ContentManagementServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,7 @@ class ContentManagementServiceProvider extends ServiceProvider
     {
         // Optional: Register routes, views, etc.
         $router->aliasMiddleware( 'language', Language::class);
-        $router->aliasMiddleware( 'ResponseFormat', ResponseFormat::class );
+        $router->aliasMiddleware( 'response-format', ResponseFormat::class);
 
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
 

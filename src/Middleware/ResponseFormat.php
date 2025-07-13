@@ -1,6 +1,6 @@
 <?php
 
-namespace khessels\responseformat\Middleware;
+namespace khessels\cms\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
