@@ -30,7 +30,7 @@ class ContentController extends ControllersController
     public function createImagesDirectory( Request $request){
         $directory = $request->get( 'directory');
         if( ! empty( $directory)){
-            Storage::disk( config( "cms.images_disks")[ 0])->makeDirectory( $directory);
+            Storage::disk( config( "cms.images_disks")[ 0])->makeDirectory( $directory, 0777, true);
         }
         if ($request->wantsJson()) {
            // Handle JSON response
@@ -70,29 +70,29 @@ class ContentController extends ControllersController
         return redirect()->back();
     }
 
-    private function getResources( $request){
+    private function getResources( $request, $directory){
         $filters = $request->all();
 
         $url = Storage::disk( config( "cms.images_disks")[ 0])->url( "");
         $storageAllResources = Storage::disk( config( "cms.images_disks")[ 0])
-            ->allFiles();
+            ->allFiles( $directory);
 
         // iterate the images and create a list of resources
         $resources = [];
         foreach( $storageAllResources as $resource){
-            $filename = explode( '/', $resource);
-            $filename = $filename[ count( $filename) - 1];
-            $exploded = explode( '.', $filename);
-            if( in_array( strtolower( $exploded[ count( $exploded) -1]), $this->acceptedImageFileExtensions)){
-                $resource = [];
-                $resource[ 'url'] = $url . $filename;
-                $resource[ 'uri'] = $url;
-                $resource[ 'filename'] = $filename;
-                $resource[ 'disk'] = config( "cms.images_disks")[ 0];
-                if( array_search( $filename . '.json', $storageAllResources)){
-                    $resource[ 'data'] = json_decode( Storage::disk( config( "cms.images_disks")[ 0])->get( $filename . '.json'), true );
+            $exploded = explode( '/', $resource);
+            $baseFilename = $exploded[ count( $exploded) - 1];
+            $explodedBaseFileName = explode( '.', $baseFilename);
+            if( in_array( strtolower( $explodedBaseFileName[ count( $explodedBaseFileName) -1]), $this->acceptedImageFileExtensions)){
+                $obj = [];
+                $obj[ 'url'] = $url .$resource;
+                $obj[ 'base_url'] = $url;
+                $obj[ 'filename'] = $baseFilename;
+                $obj[ 'disk'] = config( "cms.images_disks")[ 0];
+                if( array_search( $resource . '.json', $storageAllResources)){
+                    $obj[ 'data'] = json_decode( Storage::disk( config( "cms.images_disks")[ 0])->get( $resource . '.json'), true );
                 }
-                $resources[] = $resource;
+                $resources[] = $obj;
             }
         }
         return $resources;
@@ -110,13 +110,14 @@ class ContentController extends ControllersController
     }
     public function updateImageAttributes( Request $request){
         $data       = $request->all();
+        $directory  = $request->directory;
         $filename   = $data[ 'filename'];
         $language   = app()->getLocale();
         if( ! empty( $data[ 'language'])){
             $language = $data[ 'language'];
         }
         $disk       = config( "cms.images_disks")[ 0];
-        $file       = Storage::disk( $disk)->get( $filename . '.json');
+        $file       = Storage::disk( $disk)->get( $directory . '/' . $filename . '.json');
 
         $json = [];
         if( ! empty( $file)){
@@ -142,7 +143,7 @@ class ContentController extends ControllersController
         if( ! empty( $data['tags'])){
             $json[ 'tags'] = explode( ',', $data[ 'tags']);
         }
-        Storage::disk( $disk)->put( $filename . '.json', json_encode( $json));
+        Storage::disk( $disk)->put( $directory . '/' .  $filename . '.json', json_encode( $json));
 
         if ($request->wantsJson()) {
            // Handle JSON response
@@ -152,14 +153,14 @@ class ContentController extends ControllersController
     }
     public function index( Request $request)
     {
-        $resources = $this->getResources( $request);
         $templateNames = $this->templateNames( $request);
         $directory = '';
         if( $request->has( 'directory')){
             $directory = $request->get( 'directory');
         }
+        $resources = $this->getResources( $request, $directory);
         $directories = Storage::disk( config( "cms.images_disks")[ 0])->allDirectories();
-        return view( 'package-views::cms')
+        return view( 'package-views::cms', ['directory' => $directory])
             ->with( 'template_pages', $templateNames)
             ->with( 'resourceList', $resources)
             ->with( 'page', 'image-management')
@@ -203,23 +204,16 @@ class ContentController extends ControllersController
         }
         return redirect()->back();
     }
-    public function imagesAction( Request $request){
-        if( strtolower( $request->action) === 'delete'){
-            $arr = $request->selected_images;
-            Storage::disk('public')->delete( $arr);
-            foreach( $arr as $key => $file){
-                $arr[ $key] = $arr[ $key] . ".json";
-            }
-            Storage::disk('public')->delete( $arr);
-        }else if( strtolower( $request->action) === 'move'){
-            foreach( $request->selected_images as $image){
-                $moveto = $request->moveto;
-                $imageParts = explode('/', $image);
-                $imageName = $imageParts[ count( $imageParts)-1];
+    public function moveImages( Request $request){
+        foreach( $request->ids as $image){
+            $moveto = $request->target_directory;
 
-                Storage::disk('public')->move( $image, $moveto . '/' . $imageName);
-                Storage::disk('public')->move( $image . '.' . $request->language . ".json", $moveto . '/' . $imageName . '.' . $request->language . '.json');
-            }
+            Storage::disk( config( "cms.images_disks")[ 0])->move( $image, $moveto . '/' . $image);
+            Storage::disk( config( "cms.images_disks")[ 0])->move( $image . ".json", $moveto . '/' . $image . '.json');
+        }
+        if ($request->wantsJson()) {
+           // Handle JSON response
+           return response()->json(['success' => true]);
         }
         return redirect()->back();
     }
@@ -252,7 +246,6 @@ class ContentController extends ControllersController
             return response('Endpoint is reachable: ' . $response->body());
         } elseif ($response->clientError()) {
             return response('Client error: ' . $responseData['message'] ?? '', 300);
-
         } elseif ($response->serverError()) {
             return response('Client error: ' . $responseData['message'] ?? '', 400);
         }

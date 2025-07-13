@@ -137,13 +137,46 @@
                     <div>
 
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <form action="{{ route('cms.dropzone.store') }}" method="post" enctype="multipart/form-data" id="image-upload" class="dropzone">
                                     <input type="hidden" name="directory" value="{{ $directory }}">
                                     @csrf
                                 </form>
                                 <button id="uploadFile" class="btn btn-primary mt-1">Upload Images</button>
                             </div>
+                            <div class="col-6">
+                                <form action="/cms/images/directory" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="directory" value="{{ $directory }}">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <h4>Remove Directory</h4>
+                                    <select class="form-select" name="directory">
+                                        @foreach( $directories as $_directory)
+                                            @php
+                                                $selected = '';
+                                                if( $directory === $_directory){
+                                                    $selected = 'selected';
+                                                }
+                                            @endphp
+                                            <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
+                                        @endforeach
+                                    </select>
+                                    <input  type="submit" class="btn btn-primary mt-1" value="Remove directory">
+                                </form>
+                                <form action="/cms/images/directory" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="directory" value="{{ $directory }}">
+                                    <h4>Create directory</h4>
+                                    <select class="form-select" name="parent">
+                                        <option value="" selected>Root</option>
+                                        @foreach( $directories as $_directory)
+                                            <option value="{{ $_directory }}">{{ $_directory }}</option>
+                                        @endforeach
+                                    </select>
+                                    <input class="form-control mt-1" type="text" name="directory">
+                                    <input type="submit" class="btn btn-primary mt-1" value="Create directory">
+                                </form>
+
                         </div>
                         <hr>
                         <div class="row">
@@ -162,14 +195,42 @@
                                         <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
                                             <div class="row">
                                                 <div class="col-4">
+                                                    <select id="selDirectory" class="form-select" name="directory" onchange="window.location.href='/cms?directory=' + this.value + '#images'">
+                                                        <option value="" selected>Root</option>
+                                                        @foreach( $directories as $_directory)
+                                                            @php
+                                                                $selected = '';
+                                                                if( $directory === $_directory){
+                                                                    $selected = 'selected';
+                                                                }
+                                                            @endphp
+                                                            <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4">
                                                     <select id="sel_actions">
                                                         <option value="" selected>{{__('Select')}}</option>
                                                         <option value="delete" >{{__('Delete')}}</option>
-                                                        <option value="archive" >{{__('Archive')}}</option>
+                                                        <option value="moveto" >{{__('Move to directory')}}</option>
+                                                    </select>
+                                                    <select id="sel_moveto" class="form-select" style="display:none" name="moveto_directory" >
+                                                        <option value="" selected>Root</option>
+                                                        @foreach( $directories as $_directory)
+                                                            @php
+                                                                $selected = '';
+                                                                if( $directory === $_directory){
+                                                                    $selected = 'selected';
+                                                                }
+                                                            @endphp
+                                                            <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
+                                                        @endforeach
                                                     </select>
                                                     <button id="btn_action" type="button" class="btn btn-primary disabled">{{__('Apply')}}</button>
                                                 </div>
-                                                <div class="col-4">
+                                                <div class="col">
                                                     <p><strong>Click on the image preview to copy the link</strong></p>
                                                 </div>
                                             </div>
@@ -476,6 +537,7 @@
                 <form method="POST" action="/cms/image/attributes">
                     <input type="hidden" name="_method" value="PATCH">
                     <input type="hidden" name="filename" class="filename" value="">
+                    <input type="hidden" name="directory" value="{{ $directory }}">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Set Image Attributes</h5>
@@ -557,6 +619,7 @@
                 </form>
             </div>
         </div>
+
     </div>
 @endsection
 
@@ -643,12 +706,23 @@
         let file = undefined;
         let mdlAttributes = new bootstrap.Modal(document.getElementById("mdl_attributes"), {});
 
+        body.on('change', '#sel_actions', function( e){
+            let action = $('#sel_actions').val();
+            if( action === 'moveto'){
+                $('#sel_moveto').show();
+            }else{
+                $('#sel_moveto').hide();
+            }
+        });
         body.on('click', '#btn_action', function( e){
             e.preventDefault();
             let action = $('#sel_actions').val();
             switch( action){
                 case 'delete':
                     deleteSelected( actionIds);
+                    break;
+                case 'moveto':
+                    moveImagesToDirectory( actionIds);
                     break;
             }
         })
@@ -667,6 +741,23 @@
                 data: JSON.stringify( ids),
                 url : '/cms/images?ids=' + ids.toString(),
                 type : 'DELETE'
+            });
+        }
+        function moveImagesToDirectory( ids){
+            $.ajax({
+                headers : {
+                    'X-CSRF-Token' : "{{ csrf_token() }}"
+                },
+                dataType: "json",
+                success : function( data) {
+                    window.location.reload()
+                },
+                error: function (a, b, c){
+                    console.log( a)
+                },
+                data: {ids: ids, target_directory: $('#sel_moveto').val()},
+                url : '/cms/images/move',
+                type : 'PUT'
             });
         }
         body.on('click', 'input[type=checkbox]', function(){
