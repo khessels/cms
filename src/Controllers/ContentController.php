@@ -572,13 +572,10 @@ class ContentController extends ControllersController
         try{
             $foundContent = self::_getTagAndValue( $expression, $content );
             $mimetype = ! empty( $expression[ 'mimetype' ] ) ? $expression[ 'mimetype' ] : 'text/html';
-            if( $expression['key'] == 'outro-2'){
-                $s = '';
-            }
+
             if( Session::get('cms.collection.enabled')){
                 self::addToCMSCollectionCache( $expression);
             }
-            // $val = $val !== null ? $val : ( isset($expression['default']) ? $expression['default'] : $expression['key']);
             if( ! $wrapped && $mimetype === 'text/html' &&  config('cms.image_management')){
                 return self::updateImageElement( $foundContent);
             }
@@ -594,9 +591,6 @@ class ContentController extends ControllersController
             $resources = Cache::get('content') ;
             $resources = empty( $resources) ? [] : $resources;
             $content = self::_translate( $expression, $resources, Session::get('cms.enable') );
-            if( $expression['key'] === 'outro-2'){
-                $s = '';
-            }
             if( ! is_array( $content)){
                 return  $content;
             }

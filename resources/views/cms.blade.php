@@ -135,259 +135,260 @@
             </div>
             <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
                 <div class="section" style="margin: 20px;">
-                    <div>
-
-                        <div class="row">
-                            <div class="col-6">
-                                <form action="{{ route('cms.dropzone.store') }}" method="post" enctype="multipart/form-data" id="image-upload" class="dropzone">
-                                    <input type="hidden" name="directory" value="{{ $directory }}">
-                                    @csrf
-                                </form>
-                                <button id="uploadFile" class="btn btn-primary mt-1">Upload Images</button>
-                            </div>
-                            <div class="col-6">
-                                <form action="/cms/images/directory" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="directory" value="{{ $directory }}">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <h4>Remove Directory</h4>
-                                    <select class="form-select" name="directory">
-                                        @foreach( $directories as $_directory)
-                                            @php
-                                                $selected = '';
-                                                if( $directory === $_directory){
-                                                    $selected = 'selected';
-                                                }
-                                            @endphp
-                                            <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
-                                        @endforeach
-                                    </select>
-                                    <input  type="submit" class="btn btn-primary mt-1" value="Remove directory">
-                                </form>
-                                <form action="/cms/images/directory" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="directory" value="{{ $directory }}">
-                                    <h4>Create directory</h4>
-                                    <select class="form-select" name="parent">
-                                        <option value="" selected>Root</option>
-                                        @foreach( $directories as $_directory)
-                                            <option value="{{ $_directory }}">{{ $_directory }}</option>
-                                        @endforeach
-                                    </select>
-                                    <input class="form-control mt-1" type="text" name="directory">
-                                    <input type="submit" class="btn btn-primary mt-1" value="Create directory">
-                                </form>
-
+                    <div class="row">
+                        <div class="col-6">
+                            <h3>Directory</h3>
+                            <p>Select the directory for all your operations.</p>
+                            <select id="selDirectory" class="form-select" name="directory" onchange="window.location.href='/cms?directory=' + this.value + '#images_tab'">
+                                <option value="" selected>Root</option>
+                                @foreach( $directories as $_directory)
+                                    @php
+                                        $selected = '';
+                                        if( $directory === $_directory){
+                                            $selected = 'selected';
+                                        }
+                                    @endphp
+                                    <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="container my-5">
-                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button" role="tab" aria-controls="list" aria-selected="true">List</button>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link" id="grid-tab" data-bs-toggle="tab" data-bs-target="#grid" type="button" role="tab" aria-controls="grid" aria-selected="false">Grid</button>
-                                        </li>
-                                    </ul>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <form action="{{ route('cms.dropzone.store') }}" method="post" enctype="multipart/form-data" id="image-upload" class="dropzone">
+                                <input type="hidden" name="directory" value="{{ $directory }}">
+                                @csrf
+                            </form>
+                            <button id="uploadFile" class="btn btn-primary mt-1">Upload Images</button>
+                        </div>
+                        <div class="col-6">
+                            <form action="/cms/images/directory" method="POST">
+                                @csrf
+                                <input type="hidden" name="directory" value="{{ $directory }}">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <h4>Remove Directory</h4>
+                                <select class="form-select" name="directory">
+                                    @foreach( $directories as $_directory)
+                                        @php
+                                            $selected = '';
+                                            if( $directory === $_directory){
+                                                $selected = 'selected';
+                                            }
+                                        @endphp
+                                        <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
+                                    @endforeach
+                                </select>
+                                <input  type="submit" class="btn btn-primary mt-1" value="Remove directory">
+                            </form>
+                            <form action="/cms/images/directory" method="POST">
+                                @csrf
+                                <input type="hidden" name="directory" value="{{ $directory }}">
+                                <h4>Create directory</h4>
+                                <select class="form-select" name="parent">
+                                    <option value="" selected>Root</option>
+                                    @foreach( $directories as $_directory)
+                                        <option value="{{ $_directory }}">{{ $_directory }}</option>
+                                    @endforeach
+                                </select>
+                                <input class="form-control mt-1" type="text" name="directory">
+                                <input type="submit" class="btn btn-primary mt-1" value="Create directory">
+                            </form>
 
-                                    <div class="tab-content mt-3" id="myTabContent">
-                                        <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <select id="selDirectory" class="form-select" name="directory" onchange="window.location.href='/cms?directory=' + this.value + '#images'">
-                                                        <option value="" selected>Root</option>
-                                                        @foreach( $directories as $_directory)
-                                                            @php
-                                                                $selected = '';
-                                                                if( $directory === $_directory){
-                                                                    $selected = 'selected';
-                                                                }
-                                                            @endphp
-                                                            <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <select id="sel_actions">
-                                                        <option value="" selected>{{__('Select')}}</option>
-                                                        <option value="delete" >{{__('Delete')}}</option>
-                                                        <option value="moveto" >{{__('Move to directory')}}</option>
-                                                    </select>
-                                                    <select id="sel_moveto" class="form-select" style="display:none" name="moveto_directory" >
-                                                        <option value="" selected>Root</option>
-                                                        @foreach( $directories as $_directory)
-                                                            @php
-                                                                $selected = '';
-                                                                if( $directory === $_directory){
-                                                                    $selected = 'selected';
-                                                                }
-                                                            @endphp
-                                                            <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <button id="btn_action" type="button" class="btn btn-primary disabled">{{__('Apply')}}</button>
-                                                </div>
-                                                <div class="col">
-                                                    <p><strong>Click on the image preview to copy the link</strong></p>
-                                                </div>
-                                            </div>
-                                            <table id="tbl_resources" class="table table-striped" style="width:100%; font-size:80%">
-                                                <thead>
-                                                    <tr>
-                                                        <th><input type="checkbox" id="cb_select_all"> {{__('Select')}}</th>
-                                                        <th>{{__('Preview')}}</th>
-                                                        <th>{{__('Lang.')}}</th>
-                                                        <th>{{__('Alt')}}</th>
-                                                        <th>{{__('Title')}}</th>
-                                                        <th>{{__('Dimensions')}}</th>
-                                                        <th>{{__('Tags')}}</th>
-                                                        <th>{{__('Actions')}}</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach( $resourceList as $resource)
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="container my-5">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button" role="tab" aria-controls="list" aria-selected="true">List</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="grid-tab" data-bs-toggle="tab" data-bs-target="#grid" type="button" role="tab" aria-controls="grid" aria-selected="false">Grid</button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content mt-3" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
+
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <select id="sel_actions">
+                                                    <option value="" selected>{{__('Select')}}</option>
+                                                    <option value="delete" >{{__('Delete')}}</option>
+                                                    <option value="moveto" >{{__('Move to directory')}}</option>
+                                                </select>
+                                                <select id="sel_moveto" class="form-select" style="display:none" name="moveto_directory" >
+                                                    <option value="" selected>Root</option>
+                                                    @foreach( $directories as $_directory)
                                                         @php
-                                                            if( ! isset( $resource[ 'filename']) || ! isset( $resource[ 'url'])){
-                                                                continue;
-                                                            }
-                                                            $lang = app()->getLocale();
-                                                            foreach( config('cms.available_locales') as $locale){
-                                                                if( ! isset( $resource[ 'data'][ $locale])){
-                                                                    $resource[ 'data'][ $locale] = [];
-                                                                }
-                                                                if( ! isset( $resource[ 'data'][ $locale][ 'alt'])){
-                                                                    $resource[ 'data'][ $locale][ 'alt'] = '';
-                                                                }
-                                                                if( ! isset( $resource[ 'data'][ $locale][ 'title'])){
-                                                                    $resource[ 'data'][ $locale][ 'title'] = '';
-                                                                }
-                                                                if( ! isset( $resource[ 'data'][ 'tags'])){
-                                                                    $resource[ 'data'][ 'tags'] = [];
-                                                                }
-                                                                if( ! isset( $resource[ 'data'][ 'width']) ){
-                                                                    $resource[ 'data'][ 'width'] = 0;
-                                                                }
-                                                                if( ! isset( $resource[ 'data'][ 'height']) ){
-                                                                    $resource[ 'data'][ 'height'] = 0;
-                                                                }
+                                                            $selected = '';
+                                                            if( $directory === $_directory){
+                                                                $selected = 'selected';
                                                             }
                                                         @endphp
-                                                        <tr>
-                                                            <td><input type="checkbox" value="{{ $resource[ 'filename']}}" data-id="{{ $resource[ 'filename']}}"></td>
-                                                            <td><img data-id="{{ $resource[ 'filename']}}" data-src="{{ $resource[ 'url'] }}" class="resource img" style="height:40px" height="40px" src="{{ $resource[ 'url'] }}" alt="{{ $resource[ 'data'][ $lang][ 'alt'] ?? ''}}" title="{{ $resource[ 'data'][ $lang][ 'title'] ?? ''}}"></td>
-                                                            <td>
-                                                                @foreach( config('cms.available_locales') as $locale)
-                                                                    {{ $locale}} <br>
-                                                                @endforeach
-                                                            </td>
-                                                            <td>
-                                                                @foreach( config('cms.available_locales') as $locale)
-                                                                    {{ $resource[ 'data'][ $locale][ 'alt']}} <br>
-                                                                @endforeach
-                                                            </td>
-                                                            <td>
-                                                                @foreach( config('cms.available_locales') as $locale)
-                                                                    {{ $resource[ 'data'][ $locale][ 'title']}} <br>
-                                                                @endforeach
-                                                            </td>
-                                                            <td>
-                                                                {{ $resource[ 'data'][ 'height']}}, {{ $resource[ 'data'][ 'width']}}<br>
-                                                            </td>
-                                                            <td>{{ implode(',', $resource[ 'data'][ 'tags'])}}</td>
-                                                            <td>
-                                                                <a href="javascript:void(0)" class="image attributes update" data-id="{{ $resource[ 'filename']}}">Change</a>
-                                                            </td>
-                                                        </tr>
+                                                        <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
                                                     @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="tab-pane fade" id="grid" role="tabpanel" aria-labelledby="grid-tab">
-                                            <div class="row" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
-                                                @foreach( $resourceList as $resource)
-                                                    <div class="col">
-                                                        <img data-id="{{ $resource[ 'filename']}}"
-                                                             data-src="{{ $resource[ 'url'] }}"
-                                                             class="resource img"
-                                                             style="height:40px"
-                                                             height="40px"
-                                                             src="{{ $resource[ 'url'] }}"
-                                                             alt="{{ $resource[ 'data'][ $lang][ 'alt'] ?? ''}}"
-                                                             title="{{ $resource[ 'data'][ $lang][ 'title'] ?? ''}}">
-                                                        {{-- <img style="width:100px;" src="{{ $url }}" alt="" class="img" data-directory="{{ $directory }}" data-file="{{ $file }}" data-url="{{ $url }}"/><br> --}}
-                                                        {{-- <input type="checkbox" name=selected_images[] value="{{ $resource[ 'filename'] }}"> --}}
-                                                    </div>
-                                                @endforeach
+                                                </select>
+                                                <button id="btn_action" type="button" class="btn btn-primary disabled">{{__('Apply')}}</button>
                                             </div>
+                                            <div class="col">
+                                                <p><strong>Click on the image preview to copy the link</strong></p>
+                                            </div>
+                                        </div>
+                                        <table id="tbl_resources" class="table table-striped" style="width:100%; font-size:80%">
+                                            <thead>
+                                                <tr>
+                                                    <th><input type="checkbox" id="cb_select_all"> {{__('Select')}}</th>
+                                                    <th>{{__('Preview')}}</th>
+                                                    <th>{{__('Lang.')}}</th>
+                                                    <th>{{__('Alt')}}</th>
+                                                    <th>{{__('Title')}}</th>
+                                                    <th>{{__('Dimensions')}}</th>
+                                                    <th>{{__('Tags')}}</th>
+                                                    <th>{{__('Actions')}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach( $resourceList as $resource)
+                                                    @php
+                                                        if( ! isset( $resource[ 'filename']) || ! isset( $resource[ 'url'])){
+                                                            continue;
+                                                        }
+                                                        $lang = app()->getLocale();
+                                                        foreach( config('cms.available_locales') as $locale){
+                                                            if( ! isset( $resource[ 'data'][ $locale])){
+                                                                $resource[ 'data'][ $locale] = [];
+                                                            }
+                                                            if( ! isset( $resource[ 'data'][ $locale][ 'alt'])){
+                                                                $resource[ 'data'][ $locale][ 'alt'] = '';
+                                                            }
+                                                            if( ! isset( $resource[ 'data'][ $locale][ 'title'])){
+                                                                $resource[ 'data'][ $locale][ 'title'] = '';
+                                                            }
+                                                            if( ! isset( $resource[ 'data'][ 'tags'])){
+                                                                $resource[ 'data'][ 'tags'] = [];
+                                                            }
+                                                            if( ! isset( $resource[ 'data'][ 'width']) ){
+                                                                $resource[ 'data'][ 'width'] = 0;
+                                                            }
+                                                            if( ! isset( $resource[ 'data'][ 'height']) ){
+                                                                $resource[ 'data'][ 'height'] = 0;
+                                                            }
+                                                        }
+                                                    @endphp
+                                                    <tr>
+                                                        <td><input type="checkbox" value="{{ $resource[ 'filename']}}" data-id="{{ $resource[ 'filename']}}"></td>
+                                                        <td><img data-id="{{ $resource[ 'filename']}}" data-src="{{ $resource[ 'url'] }}" class="resource img" style="height:40px" height="40px" src="{{ $resource[ 'url'] }}" alt="{{ $resource[ 'data'][ $lang][ 'alt'] ?? ''}}" title="{{ $resource[ 'data'][ $lang][ 'title'] ?? ''}}"></td>
+                                                        <td>
+                                                            @foreach( config('cms.available_locales') as $locale)
+                                                                {{ $locale}} <br>
+                                                            @endforeach
+                                                        </td>
+                                                        <td>
+                                                            @foreach( config('cms.available_locales') as $locale)
+                                                                {{ $resource[ 'data'][ $locale][ 'alt']}} <br>
+                                                            @endforeach
+                                                        </td>
+                                                        <td>
+                                                            @foreach( config('cms.available_locales') as $locale)
+                                                                {{ $resource[ 'data'][ $locale][ 'title']}} <br>
+                                                            @endforeach
+                                                        </td>
+                                                        <td>
+                                                            {{ $resource[ 'data'][ 'height']}}, {{ $resource[ 'data'][ 'width']}}<br>
+                                                        </td>
+                                                        <td>{{ implode(',', $resource[ 'data'][ 'tags'])}}</td>
+                                                        <td>
+                                                            <a href="javascript:void(0)" class="image attributes update" data-id="{{ $resource[ 'filename']}}">Change</a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane fade" id="grid" role="tabpanel" aria-labelledby="grid-tab">
+                                        <div class="row" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
+                                            @foreach( $resourceList as $resource)
+                                                <div class="col">
+                                                    <img data-id="{{ $resource[ 'filename']}}"
+                                                            data-src="{{ $resource[ 'url'] }}"
+                                                            class="resource img"
+                                                            style="height:40px"
+                                                            height="40px"
+                                                            src="{{ $resource[ 'url'] }}"
+                                                            alt="{{ $resource[ 'data'][ $lang][ 'alt'] ?? ''}}"
+                                                            title="{{ $resource[ 'data'][ $lang][ 'title'] ?? ''}}">
+                                                    {{-- <img style="width:100px;" src="{{ $url }}" alt="" class="img" data-directory="{{ $directory }}" data-file="{{ $file }}" data-url="{{ $url }}"/><br> --}}
+                                                    {{-- <input type="checkbox" name=selected_images[] value="{{ $resource[ 'filename'] }}"> --}}
+                                                </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-12">
-                                {{-- <form action="/cms/image/management" method="POST">
-                                    @csrf
-                                    <h4>Image Directory</h4>
-                                    <select class="form-select" name="directory" id="selDirectory" onchange="this.form.submit()">
-                                        <option value="" selected>Root</option>
-                                        @foreach( $directories as $_directory)
-                                            @php
-                                                $selected = '';
-                                                if( $directory === $_directory){
-                                                    $selected = 'selected';
-                                                }
-                                            @endphp
-                                            <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
-                                        @endforeach
-                                    </select>
-                                </form> --}}
-                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            {{-- <form action="/cms/image/management" method="POST">
+                                @csrf
+                                <h4>Image Directory</h4>
+                                <select class="form-select" name="directory" id="selDirectory" onchange="this.form.submit()">
+                                    <option value="" selected>Root</option>
+                                    @foreach( $directories as $_directory)
+                                        @php
+                                            $selected = '';
+                                            if( $directory === $_directory){
+                                                $selected = 'selected';
+                                            }
+                                        @endphp
+                                        <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
+                                    @endforeach
+                                </select>
+                            </form> --}}
                         </div>
-                        <div class="row">
-                            <div class="col-12">
-                                {{-- <form action="/cms/images/directory" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="directory" value="{{ $directory }}">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <h4>Remove Directory</h4>
-                                    <select class="form-select" name="directory">
-                                        @foreach( $directories as $_directory)
-                                            @php
-                                                $selected = '';
-                                                if( $directory === $_directory){
-                                                    $selected = 'selected';
-                                                }
-                                            @endphp
-                                            <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
-                                        @endforeach
-                                    </select>
-                                    <input  type="submit" class="btn btn-primary" value="Remove directory">
-                                </form>
-                                <form action="/cms/images/directory" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="directory" value="{{ $directory }}">
-                                    <h4>Create directory</h4>
-                                    <select class="form-select" name="parent">
-                                        <option value="" selected>Root</option>
-                                        @foreach( $directories as $_directory)
-                                            <option value="{{ $_directory }}">{{ $_directory }}</option>
-                                        @endforeach
-                                    </select>
-                                    <input class="form-control" type="text" name="directory">
-                                    <input type="submit" class="btn btn-primary" value="Create directory">
-                                </form> --}}
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            {{-- <form action="/cms/images/directory" method="POST">
+                                @csrf
+                                <input type="hidden" name="directory" value="{{ $directory }}">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <h4>Remove Directory</h4>
+                                <select class="form-select" name="directory">
+                                    @foreach( $directories as $_directory)
+                                        @php
+                                            $selected = '';
+                                            if( $directory === $_directory){
+                                                $selected = 'selected';
+                                            }
+                                        @endphp
+                                        <option value="{{ $_directory }}" {{$selected}}>{{ $_directory }}</option>
+                                    @endforeach
+                                </select>
+                                <input  type="submit" class="btn btn-primary" value="Remove directory">
+                            </form>
+                            <form action="/cms/images/directory" method="POST">
+                                @csrf
+                                <input type="hidden" name="directory" value="{{ $directory }}">
+                                <h4>Create directory</h4>
+                                <select class="form-select" name="parent">
+                                    <option value="" selected>Root</option>
+                                    @foreach( $directories as $_directory)
+                                        <option value="{{ $_directory }}">{{ $_directory }}</option>
+                                    @endforeach
+                                </select>
+                                <input class="form-control" type="text" name="directory">
+                                <input type="submit" class="btn btn-primary" value="Create directory">
+                            </form> --}}
 
+                        </div>
+                        <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                            <div>
                             </div>
-                            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                                <div>
-                                </div>
-                                <div>
-                                </div>
+                            <div>
                             </div>
                         </div>
                     </div>
