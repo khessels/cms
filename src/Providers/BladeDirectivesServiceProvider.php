@@ -19,7 +19,6 @@ class BladeDirectivesServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $s = ' ';
     }
 
     /**
@@ -34,7 +33,8 @@ class BladeDirectivesServiceProvider extends ServiceProvider
 
         if (! app()->runningInConsole()) {
             $pagesCache = Cache::get('pages');
-            if( empty( $pagesCache)){
+            if( empty( $pagesCache) && config('cms.enabled') ){
+                // Retrieve pages from the CMS
                 ContentController::_retrievePages();
             }
         }

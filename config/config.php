@@ -1,12 +1,13 @@
 <?php
 
 return [
+    'enabled'                       => env('CMS_ENABLED', (int) env('CMS_ENABLED', 1)),
     'token'                         => env('CMS_TOKEN', ''),
     'app'                           => env('CMS_APP', ''),
     'dev'                           => env('CMS_DEV', ''),
     'domain'                        => env('CMS_DOMAIN', 'https://content.khessels.com'),
     'expire'                        => (int) env('CMS_EXPIRE', 3600),
-    'post'                          => (int) env('CMS_POST', 'YES'),
+    'post'                          => (int) env('CMS_POST', 1),
     'backup'                        => (int) env('CMS_BACKUP', 0),
     'backup_count'                  => (int) env('CMS_BACKUP_COUNT', 10),
 
