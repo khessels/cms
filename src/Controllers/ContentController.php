@@ -252,6 +252,27 @@ class ContentController extends ControllersController
         return response('Unknown Error', 500);
     }
 
+    public function db_populate_from_resources( Request $request ){
+        $all = $request->all();
+        if( $request->has( 'app')){
+            $files = Storage::disk( "resources")->allFiles();
+            if( empty( $files)){
+                $this->alertNotification( 'No resources found to populate database', 'warning');
+                return redirect( '/cms#content_tab');
+            }
+            foreach ($files as $file){
+                $serialized = Storage::disk( 'resources')->get( $file);
+                $r = Http::withToken( config( 'cms.token'))->withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                    'x-dev' => config( 'cms.dev'),
+                    'x-app' => config( 'cms.app')
+                ])->post( config( 'cms.domain') . '/api/database/populate/from-resources', ['language'=> $file, 'data' => $serialized]);
+            }
+            $this->alertNotification( 'Database has been repopulated', 'success');
+        }
+        return redirect('/cms#content_tab');
+    }
     public function db_delete( Request $request ){
         if( $request->has('app')){
             $r = Http::withToken( config('cms.token'))->withHeaders([
