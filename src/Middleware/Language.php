@@ -20,7 +20,7 @@ class Language
     $available_languages        array with language-tag-strings (must be lowercase) that are available
     $http_accept_language    a HTTP_ACCEPT_LANGUAGE string (read from $_SERVER['HTTP_ACCEPT_LANGUAGE'] if left out)
 */
-    function preferredLanguage ($available_languages,$http_accept_language="auto") {
+    function preferredLanguage ($available_languages, $http_accept_language="auto") {
 
         // if $http_accept_language was left out, read it from the HTTP-Header
         if ($http_accept_language == "auto") $http_accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';

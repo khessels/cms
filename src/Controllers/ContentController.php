@@ -219,7 +219,7 @@ class ContentController extends ControllersController
     }
 
     public function getPageFromCMS($page){
-        $pages = Cache::get('pages');
+        $pages = Cache::get('pages', []);
         foreach( $pages as $oPage){
             if( strtolower($page) ===  strtolower($oPage['page']) ){
                 return view("templates." . $oPage['template'])->with('page', $page);
