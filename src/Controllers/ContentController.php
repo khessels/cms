@@ -233,7 +233,7 @@ class ContentController extends ControllersController
             }
         }
         if ( $request->wantsJson()){
-            return response()->json(['message' => 'Resource not found'], 404);
+            return response('Resource not found', 404);
         }
         abort(404);
     }
