@@ -218,18 +218,22 @@ class ContentController extends ControllersController
         return redirect('/cms#images_tab');
     }
 
-    public function getPageFromCMS($page){
+    public function getPageFromCMS( Request $request, $page)
+    {
         $pages = Cache::get('pages', []);
-        foreach( $pages as $oPage){
-            if( strtolower($page) ===  strtolower($oPage['page']) ){
+        foreach ($pages as $oPage) {
+            if (strtolower($page) === strtolower($oPage['page'])) {
                 return view("templates." . $oPage['template'])->with('page', $page);
             }
-            $properties =  json_decode( $oPage['properties'], true);
-            foreach( $properties['urls'] as $url ){
-                if( strtolower( $page) ===  strtolower( $url) ){
+            $properties = json_decode($oPage['properties'], true);
+            foreach ($properties['urls'] as $url) {
+                if (strtolower($page) === strtolower($url)) {
                     return view("templates." . $oPage['template'])->with('page', $page)->with('template', $oPage['template']);
                 }
             }
+        }
+        if ( $request->wantsJson()){
+            return response()->json(['message' => 'Resource not found'], 404);
         }
         abort(404);
     }
