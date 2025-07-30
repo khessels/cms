@@ -53,3 +53,4 @@ Blade example:
 
 ## Shout out:
 https://spatie.be/open-source/packages
+awesome work guys!
