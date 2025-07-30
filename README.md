@@ -16,10 +16,11 @@ router file: web.php
 Route::group(['middleware' => [ 'web', 'language' ]], function () {
   Route::post('/test/communication', [ContentController::class, 'testEndpoint'])->name('cms.endpoint.test')->middleware(['response-format:default']);
 });
+```
 
 
+```
 Blade example:
-'''
 @section('title')
      @c(['mimetype' => 'text/plain', 'key' => 'title', 'page' => $page, 'editable'=> false])
 @endsection
@@ -43,3 +44,4 @@ Blade example:
             </div>
         </main>
     '])
+```
