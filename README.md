@@ -45,3 +45,6 @@ Blade example:
         </main>
     '])
 ```
+# Current known issues:
+1. watch the single quote and double quote layout. the default content text must contain double qoutes otherwise it breaks.
+2. the content can currently not contain nested blade directives.
