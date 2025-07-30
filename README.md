@@ -59,7 +59,7 @@ Rename response-format to make it compatible with extenral response-format packa
 
 # upcomming features:
 
-Integrate a drag and drop interface to expand dynamic page use
+A drag and drop UI interface to expand dynamic page and ad form creation capabilities
 
 
 
