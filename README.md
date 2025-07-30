@@ -6,11 +6,6 @@ In essence it works the same way as the current laravel default translation syst
   
 This version also includes response-format to create a unified API response format including uses for async based operations
 
-Requirements: laravel spatie mermission installed with an admin or developer role defined.
-
-todo: rename response-format to make it compatible with extenral response-format package
-
-
 ```
 router file: web.php
 Route::group(['middleware' => [ 'web', 'language' ]], function () {
@@ -45,10 +40,27 @@ Blade example:
         </main>
     '])
 ```
+# Requirements: 
+
+laravel spatie mermission installed with an admin or developer role defined.
+
+
 # Current known issues:
+
 1. watch the single quote and double quote layout. the default content must contain double qoutes otherwise it breaks.
 2. the content can currently not contain nested blade directives.
 3. response-format is currently buildin, but idealy this must be a seperate package to avoid conflict
+
+
+# todo: 
+
+Rename response-format to make it compatible with extenral response-format package
+
+
+# upcomming features:
+
+Integrate a drag and drop interface to expand dynamic page use
+
 
 
 ## Shout out:
