@@ -1,5 +1,5 @@
 # CMS package 
-A package to give laravel\blade i18n and wordpress like abilities which connects to the kcs-content manager acting as a headless cms
+A package to give laravel\blade i18n and wordpress like abilities which connects to the kcs-content manager backend, acting as a headless cms
   providing: remote or on page content editing, dynamic pages based on page templates, i18n and more
 It works based on a custom blade tag that translates the the parameters into content that will be saved locally as a resource for subsequent page calls
 In essence it works the same way as the current laravel default translation system, just way more extended. 
