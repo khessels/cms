@@ -59,7 +59,8 @@ Rename response-format to make it compatible with extenral response-format packa
 
 # upcomming features:
 
-A drag and drop UI interface to expand dynamic page and ad form creation capabilities
+A drag and drop UI interface to expand dynamic page and ad form creation capabilities.
+( https://github.com/kristijanhusak/laravel-form-builder )
 
 
 
