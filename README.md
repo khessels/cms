@@ -9,6 +9,8 @@ This version also includes response-format to create a unified API response form
 Requirements: laravel spatie mermission installed with an admin or developer role defined.
 
 todo: rename response-format to make it compatible with extenral response-format package
+
+router file: web.php
 ```
 Route::group(['middleware' => [ 'web', 'language' ]], function () {
   Route::post('/test/communication', [ContentController::class, 'testEndpoint'])->name('cms.endpoint.test')->middleware(['response-format:default']);
