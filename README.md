@@ -1,5 +1,5 @@
 # CMS package 
-A package to give wordpress like abilities to laravel which connects to the kcs-content manager.
+A package to give blade i18n and wordpress like abilities which connects to the kcs-content manager acting as a headless cms
   It provides on page content editing, dynamic pages based on page templates and more
 
   
