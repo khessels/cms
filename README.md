@@ -48,4 +48,4 @@ Blade example:
 # Current known issues:
 1. watch the single quote and double quote layout. the default content must contain double qoutes otherwise it breaks.
 2. the content can currently not contain nested blade directives.
-3. response-format is currently buildin, bust idealy be a seperate package within it own local namespace
+3. response-format is currently buildin, but idealy this must be a seperate package to avoid conflict
