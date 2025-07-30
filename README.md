@@ -49,3 +49,7 @@ Blade example:
 1. watch the single quote and double quote layout. the default content must contain double qoutes otherwise it breaks.
 2. the content can currently not contain nested blade directives.
 3. response-format is currently buildin, but idealy this must be a seperate package to avoid conflict
+
+
+## Shout out:
+https://spatie.be/open-source/packages
