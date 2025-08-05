@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Number;
-use khessels\cms\Controllers\ContentController;
+use Khessels\Cms\Controllers\ContentController;
 
 class BladeDirectivesServiceProvider extends ServiceProvider
 {
@@ -57,7 +57,7 @@ class BladeDirectivesServiceProvider extends ServiceProvider
         // $rey = app()->runningInConsole();
 //        if (! app()->runningInConsole()) {
         Blade::directive('c', function ( string $expression) {
-            return "<?php echo khessels\cms\Controllers\ContentController::translate( $expression); ?>";
+            return "<?php echo Khessels\Cms\Controllers\ContentController::translate( $expression); ?>";
         });
 //        }
 

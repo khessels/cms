@@ -6,17 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Lange Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\File;
 
-use khessels\cms\Controllers\Controller as ControllersController;
+use Khessels\Cms\Controllers\Controller as PackageController;
 
-
-class ContentController extends ControllersController
+/* TODO-LIST
+TODO: CHANGE PAGES CACHE to RESOURCE FILE
+*/
+class ContentController extends PackageController
 {
     public $acceptedImageFileExtensions = null;
 

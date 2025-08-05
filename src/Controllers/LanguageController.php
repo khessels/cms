@@ -1,6 +1,6 @@
 <?php
 
-namespace khessels\cms\Controllers;
+namespace Khessels\Cms\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;

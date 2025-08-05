@@ -1,11 +1,11 @@
 <?php
 
-namespace khessels\cms\Providers;
+namespace Khessels\Cms\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
 use khessels\cms\Middleware\Language;
-use khessels\cms\Middleware\ResponseFormat;
+use khessels\responseformat\Middleware\ResponseFormat;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Http\Kernel;
 

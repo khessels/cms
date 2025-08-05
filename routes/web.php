@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use khessels\cms\Controllers\ContentController;
-use khessels\cms\Controllers\LanguageController;
+use Khessels\Cms\Controllers\ContentController;
+use Khessels\Cms\Controllers\LanguageController;
 
 Route::group(['middleware' => [ 'web', 'language' ]], function () {
     Route::group(['prefix' => 'language'], function () {

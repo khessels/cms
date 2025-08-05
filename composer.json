@@ -1,7 +1,7 @@
 {
     "name": "khessels/cms",
     "version":"1.0.0",
-    "description": "Integrate your laravel project with cms",
+    "description": "Client package integrating kcs-content-cms for laravel ",
     "type": "library",
     "autoload": {
         "psr-4": {
@@ -12,7 +12,7 @@
         {
             "name": "khessels",
             "email": "kees.hessels@gmail.com",
-            "homepage": "https://khessels.com/"
+            "homepage": "https://content.khessels.com/"
         }
     ],
     "repositories": [
@@ -27,8 +27,9 @@
     ],
     "minimum-stability": "dev",
         "require": {
-        "php": "^8.4",
-        "illuminate/support": "^12.17"
+            "php": "^8.4",
+            "illuminate/support": "^12.17",
+            "khessels/response-format": "@dev"
     },
     "prefer-stable": true,
     "config": {
