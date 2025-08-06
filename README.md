@@ -6,16 +6,15 @@ In essence it works the same way as the current laravel default translation syst
   
 This version also includes response-format to create a unified API response format including uses for async based operations
 
-```
 router file: web.php
+```
 Route::group(['middleware' => [ 'web', 'language' ]], function () {
   Route::post('/test/communication', [ContentController::class, 'testEndpoint'])->name('cms.endpoint.test')->middleware(['response-format:default']);
 });
 ```
 
-
-```
 Blade example:
+```
 @section('title')
      @c(['mimetype' => 'text/plain', 'key' => 'title', 'page' => $page, 'editable'=> false])
 @endsection

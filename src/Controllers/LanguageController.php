@@ -10,8 +10,8 @@ class LanguageController extends Controller
 {
     public function update(Request $request)
     {
-        $language = $request->input( 'language');
-        Session::put( 'language', $language);
+        $language = $request->input('language');
+        Session::put('language', $language);
         return redirect()->back();
     }
 }

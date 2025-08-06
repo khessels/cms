@@ -40,8 +40,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "khessels\\cms\\Providers\\ContentManagementServiceProvider",
-                "khessels\\cms\\Providers\\BladeDirectivesServiceProvider"
+                "Khessels\\Cms\\Providers\\ContentManagementServiceProvider",
+                "Khessels\\Cms\\Providers\\BladeDirectivesServiceProvider"
             ]
         }
     }

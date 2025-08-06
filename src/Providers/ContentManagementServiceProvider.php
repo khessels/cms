@@ -9,14 +9,13 @@ use khessels\responseformat\Middleware\ResponseFormat;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Http\Kernel;
 
-
 class ContentManagementServiceProvider extends ServiceProvider
 {
-    public function boot( Router $router, Kernel $kernel)
+    public function boot(Router $router, Kernel $kernel)
     {
         // Optional: Register routes, views, etc.
-        $router->aliasMiddleware( 'language', Language::class);
-        $router->aliasMiddleware( 'response-format', ResponseFormat::class);
+        $router->aliasMiddleware('language', Language::class);
+        $router->aliasMiddleware('response-format', ResponseFormat::class);
 
         $this->loadRoutesFrom(__DIR__.'/../../routes/web.php');
 
