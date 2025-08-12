@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Number;
@@ -32,8 +33,8 @@ class BladeDirectivesServiceProvider extends ServiceProvider
         // view()->share( 'language', $language );
 
         if (! app()->runningInConsole()) {
-            $pagesCache = Cache::get('pages');
-            if (empty($pagesCache) && config('cms.enabled')) {
+            $pages = unserialize( Storage::disk('resources')->get( 'pages'));
+            if ( empty( $pages) && config('cms.enabled')) {
                 // Retrieve pages from the CMS
                 ContentController::_retrievePages();
             }

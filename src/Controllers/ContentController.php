@@ -232,7 +232,8 @@ class ContentController extends PackageController
 
     public function getPageFromCMS(Request $request, $page)
     {
-        $pages = Cache::get('pages', []);
+        // $pages = Cache::get('pages', []);
+        $pages = unserialize( Storage::disk('resources')->get( 'pages'));
         foreach ($pages as $oPage) {
             if (strtolower($page) === strtolower($oPage['page'])) {
                 return view("templates." . $oPage['template'])->with('page', $page);
@@ -424,11 +425,13 @@ class ContentController extends PackageController
         Session::put('cms.collection.enabled', false);
         // delete language files
         if ($lang !== '*') {
-            Storage::disk('resources')->delete($lang);
+            Storage::disk('resources')->delete( $lang);
         } else {
             $files = Storage::disk("resources")->allFiles();
             foreach ($files as $file) {
-                Storage::disk('resources')->delete($file);
+                if( $file !== 'pages') {
+                    Storage::disk('resources')->delete($file);
+                }
             }
         }
         $this->alertNotification('CMS Tag collection reset');
@@ -442,12 +445,14 @@ class ContentController extends PackageController
         }
 
         // delete language files
-        if ($lang !== '*') {
-            Storage::disk('resources')->delete($lang);
+        if ( $lang !== '*') {
+            Storage::disk('resources')->delete( $lang);
         } else {
             $files = Storage::disk("resources")->allFiles();
             foreach ($files as $file) {
-                Storage::disk('resources')->delete($file);
+                if( $file !== 'pages') {
+                    Storage::disk('resources')->delete( $file);
+                }
             }
         }
         // retrieve new content
@@ -676,7 +681,8 @@ class ContentController extends PackageController
             'x-app' => config('cms.app')
         ])->get(config('cms.domain') . '/api/page/list/ACTIVE');
         $pages = $response->json();
-        Cache::set('pages', $pages);
+        Storage::disk('resources')->put( 'pages', serialize( $pages));
+        //Cache::set('pages', $pages);
         return redirect('/cms#pages_tab');
     }
 
@@ -734,7 +740,8 @@ class ContentController extends PackageController
 
     public function clearPageCache(Request $request)
     {
-        Cache::clear('pages');
+        // Cache::clear('pages');
+        Storage::disk( 'resources')->delete( 'pages');
         return redirect('/cms#pages_tab');
     }
 }

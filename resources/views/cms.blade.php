@@ -120,8 +120,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if( ! empty( Cache::get('pages')))
-                                    @foreach( Cache::get('pages') as $page)
+                                @php
+                                    $pages = unserialize( Storage::disk('resources')->get( 'pages'));
+                                @endphp
+                                @if( ! empty( $pages))
+                                    @foreach( $pages as $page)
                                         <tr>
                                             <td>{{ $page['id'] ?? ''}}</td>
                                             <td>{{ $page['parent_id'] ?? ''}}</td>
