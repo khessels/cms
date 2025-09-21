@@ -29,7 +29,7 @@ class ContentController extends PackageController
         // parent::__construct();
         // $this->middleware('role:admin|developer');
     }
-    public function content_editor( Request $request)
+    public function content_editor( Request $request, $id)
     {
         return view('package-views::content-editor');
 

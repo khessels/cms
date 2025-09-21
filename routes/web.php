@@ -13,7 +13,7 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
 
         Route::group(['prefix' => 'cms'], function () {
             Route::get('/', [ContentController::class, 'index'])->name('cms');
-            Route::get('/content', [ContentController::class, 'content_editor'])->name('cms.content.editor');
+            Route::get('/content/{id}', [ContentController::class, 'content_editor'])->name('cms.content.editor');
 
             Route::group(['prefix' => 'images'], function () {
                 Route::delete('/', [ContentController::class, 'removeImages'])->name('cms.images.delete');
