@@ -5,7 +5,7 @@ namespace Khessels\Cms\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
 use Khessels\Cms\Middleware\Language;
-use Khessels\Responseformat\Middleware\ResponseFormat;
+use Khessels\ResponseFormat\Middleware\ResponseFormat;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Http\Kernel;
 

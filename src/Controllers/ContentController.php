@@ -29,6 +29,11 @@ class ContentController extends PackageController
         // parent::__construct();
         // $this->middleware('role:admin|developer');
     }
+    public function content_editor( Request $request)
+    {
+        return view('package-views::content-editor');
+
+    }
 
     public function createImagesDirectory(Request $request)
     {
@@ -176,7 +181,8 @@ class ContentController extends PackageController
             ->with('page', 'image-management')
             ->with('accepted_files', $this->acceptedImageFileExtensions)
             ->with('directories', $directories)
-            ->with('directory', $directory)->with('resources', []);
+            ->with('directory', $directory)
+            ->with('resources', []);
     }
     public function store(Request $request)
     {

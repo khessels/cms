@@ -13,6 +13,7 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
 
         Route::group(['prefix' => 'cms'], function () {
             Route::get('/', [ContentController::class, 'index'])->name('cms');
+            Route::get('/content', [ContentController::class, 'content_editor'])->name('cms.content.editor');
 
             Route::group(['prefix' => 'images'], function () {
                 Route::delete('/', [ContentController::class, 'removeImages'])->name('cms.images.delete');
@@ -54,7 +55,6 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
             Route::get('/enable', [ContentController::class, 'cms_enable'])->name('cms.enable');
             Route::get('/disable', [ContentController::class, 'cms_disable'])->name('cms.disable');
             Route::post('/test/communication', [ContentController::class, 'testEndpoint'])->name('cms.endpoint.test')->middleware(['response-format:default']);
-
         });
     });
     Route::get('/cms/{page}', [ContentController::class, 'getPageFromCMS'])->name('cms.page');
