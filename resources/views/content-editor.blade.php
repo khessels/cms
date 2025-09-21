@@ -2,8 +2,8 @@
 
 
 @section('css')
-    <!-- Place the first <script> tag in your HTML's <head> -->
-    <script src="https://cdn.tiny.cloud/1/qwhw6bty2u7h1kqxkp3fquyqu7hgmv5cf3e4axm74dfkcrwp/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.6/skins/content/default/content.min.css" integrity="sha512-Y464WrZHfkj3DZi0sHBxavSNE6iKAo4zFn1hQsFx9iv/mMgXZcxesvDBUyQWzRo6T8P/C0twVR+cY3wzKH5jCg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.6/tinymce.min.js" integrity="sha512-DhgyMP4Cd1jgUhBem6TDsFEzOk4SnSpLAxADwbh2p/bejweunVCRr5UuBEPgtG5J0zlOvijajXaGHwP6B+iywg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 @endsection
 
@@ -32,14 +32,6 @@
             'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'ai', 'uploadcare', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
             ],
             toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-            tinycomments_mode: 'embedded',
-            tinycomments_author: 'Author name',
-            mergetags_list: [
-            { value: 'First.Name', title: 'First Name' },
-            { value: 'Email', title: 'Email' },
-            ],
-            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-            uploadcare_public_key: '93bdd3ccf31939814c86',
         });
 
         body.on( 'click', '.btn.test.communication', function( e){
