@@ -2,17 +2,11 @@
 
 
 @section('css')
-    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
     <script>
-        tinymce.init({
-            selector: 'textarea',
-            external_plugins:
-                {
-                    'saveToPdf': 'https://cdn.rawgit.com/Api2Pdf/api2pdf.tinymce/master/save-to-pdf/dist/save-to-pdf/plugin.js'
-                },
-            toolbar: 'saveToPdf',
-            saveToPdfHandler: '/REPLACE-WITH-HANDLER-URL'
-        });
+      tinymce.init({
+        selector: '#mytextarea'
+      });
     </script>
 @endsection
 
