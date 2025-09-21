@@ -1,8 +1,25 @@
 @extends('package-views::layouts.cms')
 
+
+@section('css')
+    <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            external_plugins:
+                {
+                    'saveToPdf': 'https://cdn.rawgit.com/Api2Pdf/api2pdf.tinymce/master/save-to-pdf/dist/save-to-pdf/plugin.js'
+                },
+            toolbar: 'saveToPdf',
+            saveToPdfHandler: '/REPLACE-WITH-HANDLER-URL'
+        });
+    </script>
+@endsection
+
 @section('main')
     <div class="container">
         content editor: {{ $content }}
+        <textarea>Testing saveToPdf</textarea>
     </div>
 @endsection
 
