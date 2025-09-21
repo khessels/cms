@@ -29,10 +29,63 @@ class ContentController extends PackageController
         // parent::__construct();
         // $this->middleware('role:admin|developer');
     }
+    /*
+public function tag_update_direct(Request $request, $app, $id)
+    {
+        $all = $request->all();
+        // get element from resource file
+        $cache = Cache::get('content');
+
+        foreach ($cache as $item) {
+            if ($item['id'] == $id) {
+                // the tag['value'] can contain a null value indicating the tag['value'] has not been set.
+                //   In that case use the tag['default'] value
+                $strElement = is_null($all['value']) ? $item['default'] : $all['value'];
+                $url = config('cms.domain') . '/api/tag/direct/' . $app . '/' . $id;
+
+                $response = Http::withToken(config('cms.token'))->withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                    'x-dev' => config('cms.dev'),
+                    'x-app' => config('cms.app')
+                ])->patch(
+                    $url,
+                    ['value' => $strElement]
+                );
+                $json = $response->json();
+                if (! empty($json)) {
+                    error_log(json_encode($json));
+                }
+
+                // reload resource files
+                $this->collection_reload($request);
+                return 'OK';
+            }
+        }
+        return 'NOT FOUND';
+    }
+
+    */
     public function content_editor( Request $request, $id)
     {
-        $content = 'id: ' . $id;
-        return view('package-views::content-editor')->with('content', $content);
+        $files = Storage::disk("resources")->allFiles();
+        $languages = [];
+        foreach ( $files as $file) {
+            $content = null;
+            if( $file !== 'pages') {
+                $languages[] = $file;
+                $serialized = Storage::disk('resources')->get( $file);
+                $lines = unserialize( $serialized);
+                foreach( $lines as $line){
+                    if( $line['id'] == $id){
+                        $content = $line['value'];
+                    }
+                }
+            }
+        }
+        return view('package-views::content-editor')
+            ->with('content', $content)
+            ->with( 'languages', $languages);
     }
 
     public function createImagesDirectory(Request $request)
@@ -281,7 +334,7 @@ class ContentController extends PackageController
         $all = $request->all();
         if ($request->has('app')) {
             $files = Storage::disk("resources")->allFiles();
-            if (empty($files)) {
+            if ( empty( $files)) {
                 $this->alertNotification('No resources found to populate database', 'warning');
                 return redirect('/cms#content_tab');
             }

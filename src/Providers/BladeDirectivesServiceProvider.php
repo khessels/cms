@@ -57,7 +57,7 @@ class BladeDirectivesServiceProvider extends ServiceProvider
         });
         // $rey = app()->runningInConsole();
         //        if (! app()->runningInConsole()) {
-        Blade::directive('c', function (string $expression) {
+        Blade::directive('c', function ( string $expression) {
             return "<?php echo Khessels\Cms\Controllers\ContentController::translate( $expression); ?>";
         });
         //        }

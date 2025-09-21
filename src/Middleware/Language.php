@@ -83,41 +83,41 @@ class Language
     public function handle(Request $request, Closure $next): Response
     {
         $name = $request->route()->getName();
-        view()->share('page', $name);
+        view()->share( 'page', $name);
 
-        $cms = empty(Session::get('cms.enable')) ? false : true;
-        view()->share('cms', $cms);
+        $cms = empty( Session::get( 'cms.enable')) ? false : true;
+        view()->share( 'cms', $cms);
 
-        $isNewSession = request()->cookie(session()->getName()) === null;
-        if ($isNewSession) {
-            if (empty(Session::get('language'))) {
-                $language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : App::getLocale();
-                $lang = $this->preferredLanguage(config('cms.available_locales'), $language);
-                Session::put('language', $lang);
+        $isNewSession = request()->cookie( session()->getName()) === null;
+        if ( $isNewSession) {
+            if ( empty( Session::get('language'))) {
+                $language = isset( $_SERVER[ 'HTTP_ACCEPT_LANGUAGE']) ? $_SERVER[ 'HTTP_ACCEPT_LANGUAGE'] : App::getLocale();
+                $lang = $this->preferredLanguage( config( 'cms.available_locales'), $language);
+                Session::put( 'language', $lang);
             }
         }
         $language = Session::get('language');
-        if (! empty($language) && $language !== App::getLocale()) {
-            app()->setLocale($language);
+        if ( ! empty( $language) && $language !== App::getLocale()) {
+            app()->setLocale( $language);
         }
 
         $lang = Lang::locale();
-        view()->share('language', $lang);
-        $a = Storage::disk('resources')->get($lang);
-        if (! empty($a)) {
-            $a = unserialize($a);
+        view()->share( 'language', $lang);
+        $a = Storage::disk( 'resources')->get( $lang);
+        if ( ! empty ($a)) {
+            $a = unserialize( $a);
         } else {
             $a = [];
         }
-        $b = Storage::disk('resources')->get('language-generic');
-        if (! empty($b)) {
-            $b = unserialize($b);
+        $b = Storage::disk( 'resources')->get( 'language-generic');
+        if ( ! empty( $b)) {
+            $b = unserialize( $b);
         } else {
             $b = [];
         }
-        $content = array_merge($a, $b);
-        Cache::set('content', $content);
+        $content = array_merge( $a, $b);
+        Cache::set( 'content', $content);
 
-        return $next($request);
+        return $next( $request);
     }
 }
