@@ -11,9 +11,8 @@
     <div class="container">
         <h4>content editor: {{ $content }}</h4>
         <form method="post">
-            <textarea>
-  Welcome to TinyMCE!
-</textarea>
+            <textarea>{{ $content }}</textarea><br>
+            <input type="submit" class='btn btn-primary'>
         </form>
     </div>
 @endsection
