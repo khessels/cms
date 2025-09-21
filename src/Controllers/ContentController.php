@@ -69,23 +69,29 @@ public function tag_update_direct(Request $request, $app, $id)
     public function content_editor( Request $request, $id)
     {
         $files = Storage::disk("resources")->allFiles();
-        $languages = [];
+        $LanguageSpecificContent = [];
         foreach ( $files as $file) {
-            $content = null;
+            $content    = null;
             if( $file !== 'pages') {
-                $languages[] = $file;
                 $serialized = Storage::disk('resources')->get( $file);
                 $lines = unserialize( $serialized);
                 foreach( $lines as $line){
                     if( $line['id'] == $id){
-                        $content = $line['value'];
+                        $content    = is_null( $line['value']) ? $line['default'] : $line['value'];
+                        $LanguageSpecificContent[] = [
+                            'language'  => $file,
+                            'default'   => $line['default'],
+                            'value'     => $line['value'],
+                            'content'   => $content,
+                            'id'        => $line[ 'id'],
+                            'page'      => $line[ 'page']
+                        ];
                     }
                 }
             }
         }
         return view('package-views::content-editor')
-            ->with('content', $content)
-            ->with( 'languages', $languages);
+            ->with('content', $LanguageSpecificContent);
     }
 
     public function createImagesDirectory(Request $request)
