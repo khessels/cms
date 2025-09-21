@@ -1,13 +1,16 @@
-@extends('package-views::layouts.cms')
+@extends('components.layouts.public')
 
+@section('title')
+    {{ config('app.name') }} - Content edtor
+@endsection
 
-@section('css')
+@section('head')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.6/skins/content/default/content.min.css" integrity="sha512-Y464WrZHfkj3DZi0sHBxavSNE6iKAo4zFn1hQsFx9iv/mMgXZcxesvDBUyQWzRo6T8P/C0twVR+cY3wzKH5jCg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.6/tinymce.min.js" integrity="sha512-DhgyMP4Cd1jgUhBem6TDsFEzOk4SnSpLAxADwbh2p/bejweunVCRr5UuBEPgtG5J0zlOvijajXaGHwP6B+iywg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 @endsection
 
-@section('main')
+@section('menu')
     <div class="container">
         @foreach( $content as $c)
             <br>
@@ -20,10 +23,7 @@
             <hr>
         @endforeach
     </div>
-@endsection
-
-@section('footer-js')
-    <script>
+<script>
         let app = '{{ config('cms.app')}}'
 
         tinymce.init({
@@ -89,4 +89,13 @@
         }
 
     </script>
+@endsection
+
+@section('left-sidebar')
+@endsection
+
+@section('right-sidebar')
+@endsection
+
+@section('body')
 @endsection
