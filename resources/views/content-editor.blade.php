@@ -1,4 +1,4 @@
-@extends('parent::components.layouts.public')
+@extends('components.layouts.public')
 
 @section('head')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.6/skins/content/default/content.min.css" integrity="sha512-Y464WrZHfkj3DZi0sHBxavSNE6iKAo4zFn1hQsFx9iv/mMgXZcxesvDBUyQWzRo6T8P/C0twVR+cY3wzKH5jCg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
