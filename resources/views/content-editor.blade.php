@@ -2,6 +2,7 @@
 
 @section('main')
     <div class="container">
+        content editor
     </div>
 @endsection
 
