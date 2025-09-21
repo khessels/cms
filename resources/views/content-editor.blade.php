@@ -6,7 +6,7 @@
 
 @endsection
 
-@section('menu')
+@section('body')
     <div class="container">
         @foreach( $content as $c)
             <br>
@@ -19,7 +19,7 @@
             <hr>
         @endforeach
     </div>
-<script>
+    <script>
         let app = '{{ config('cms.app')}}'
 
         tinymce.init({
