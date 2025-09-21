@@ -19,6 +19,9 @@
             <hr>
         @endforeach
     </div>
+
+@endsection
+@section('scripts-eop')
     <script>
         let app = '{{ config('cms.app')}}'
 
@@ -63,9 +66,6 @@
             });
         });
 
-    </script>
-    <script type="text/javascript">
-
         function deleteSelected( ids){
             $.ajax({
                 headers : {
@@ -85,13 +85,4 @@
         }
 
     </script>
-@endsection
-
-@section('left-sidebar')
-@endsection
-
-@section('right-sidebar')
-@endsection
-
-@section('body')
 @endsection
