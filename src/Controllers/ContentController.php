@@ -31,8 +31,8 @@ class ContentController extends PackageController
     }
     public function content_editor( Request $request, $id)
     {
-        return view('package-views::content-editor');
-
+        $content = 'id: ' . $id;
+        return view('package-views::content-editor')->with('content', $content);
     }
 
     public function createImagesDirectory(Request $request)
