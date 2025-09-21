@@ -2,7 +2,7 @@
 
 @section('main')
     <div class="container">
-        content editor
+        content editor: {{ $content }}
     </div>
 @endsection
 
