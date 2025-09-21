@@ -12,8 +12,10 @@
 
 @section('main')
     <div class="container">
-        content editor: {{ $content }}
-        <textarea>Testing saveToPdf</textarea>
+        <h4>content editor: {{ $content }}</h4>
+        <form method="post">
+            <textarea id="mytextarea">Hello, World!</textarea>
+        </form>
     </div>
 @endsection
 
