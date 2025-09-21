@@ -21,6 +21,7 @@ class ContentManagementServiceProvider extends ServiceProvider
 
         // Load views
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'package-views');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'parent');
 
         // Publish config
         $this->publishes([
