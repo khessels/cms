@@ -9,11 +9,16 @@
 
 @section('main')
     <div class="container">
-        <h4>content editor: {{ $content }}</h4>
-        <form method="post">
-            <textarea>{{ $content }}</textarea><br>
-            <input type="submit" class='btn btn-primary'>
-        </form>
+        @foreach( $content as $c)
+            <br>
+            <h4>language: {{ $c[ 'language'] }}</h4>
+            <form method="post">
+                <textarea>{{ $c[ 'content'] }}</textarea><br>
+                <input type="submit" class='btn btn-primary'>
+            </form>
+            <br><br><br>
+            <hr>
+        @endforeach
     </div>
 @endsection
 
