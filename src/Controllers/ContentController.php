@@ -304,9 +304,12 @@ public function tag_update_direct(Request $request, $app, $id)
                 return view("templates." . $oPage['template'])->with('page', $page);
             }
             $properties = json_decode($oPage['properties'], true);
-            foreach ($properties['urls'] as $url) {
-                if (strtolower($page) === strtolower($url)) {
-                    return view("templates." . $oPage['template'])->with('page', $page)->with('template', $oPage['template']);
+            // Check if properties was decoded successfully and has urls key
+            if (is_array($properties) && isset($properties['urls']) && is_array($properties['urls'])) {
+                foreach ($properties['urls'] as $url) {
+                    if (strtolower($page) === strtolower($url)) {
+                        return view("templates." . $oPage['template'])->with('page', $page)->with('template', $oPage['template']);
+                    }
                 }
             }
         }
