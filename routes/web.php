@@ -9,7 +9,7 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
         Route::post('/switch', [LanguageController::class, 'update'])->name('post.language.switch');
     });
 
-    Route::group(['middleware' => [ 'role:admin|developer']], function () {
+    Route::group(['middleware' => [ 'role:admin']], function () {
 
         Route::group(['prefix' => 'cms'], function () {
             Route::get('/', [ContentController::class, 'index'])->name('cms');
@@ -58,7 +58,7 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
         });
     });
     Route::get('/cms/{page}', [ContentController::class, 'getPageFromCMS'])->name('cms.page');
-    Route::get('/cms/image/data', [ContentController::class, 'getImageData'])->name('cms.image.data.get');
+    //Route::get('/cms/image/data', [ContentController::class, 'getImageData'])->name('cms.image.data.get');
 
     Route::fallback( [ContentController::class, 'getPageFromCMS'] );
 });
