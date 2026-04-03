@@ -40,21 +40,21 @@ class BladeDirectivesServiceProvider extends ServiceProvider
             }
         }
 
-        Blade::directive('money_old', function ($amount) {
-            return "<?php echo '€' . number_format($amount, 2, ',', '.'); ?>";
-        });
-
-        Blade::directive('money', function ($amount) {
-            return "<?php echo Number::currency( $amount, in: 'EUR', locale: App::getLocale()) ?>";
-        });
-
-        Blade::directive('number', function ($number, $default = null) {
-            return "<?php echo Number::format( $number,  precision: 0, locale: App::getLocale()); ?>";
-        });
-
-        Blade::directive('round', function ($amount, $precision = 1) {
-            return "<?php echo round( $amount, $precision); ?>";
-        });
+//        Blade::directive('money_old', function ($amount) {
+/*            return "<?php echo '€' . number_format($amount, 2, ',', '.'); ?>";*/
+//        });
+//
+//        Blade::directive('money', function ($amount) {
+/*            return "<?php echo Number::currency( $amount, in: 'EUR', locale: App::getLocale()) ?>";*/
+//        });
+//
+//        Blade::directive('number', function ($number, $default = null) {
+/*            return "<?php echo Number::format( $number,  precision: 0, locale: App::getLocale()); ?>";*/
+//        });
+//
+//        Blade::directive('round', function ($amount, $precision = 1) {
+/*            return "<?php echo round( $amount, $precision); ?>";*/
+//        });
         // $rey = app()->runningInConsole();
         //        if (! app()->runningInConsole()) {
         Blade::directive('c', function ( string $expression) {

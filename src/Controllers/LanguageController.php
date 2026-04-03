@@ -4,9 +4,8 @@ namespace Khessels\Cms\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Routing\Controller;
 
-class LanguageController extends Controller
+class LanguageController extends CMSController
 {
     public function update(Request $request)
     {

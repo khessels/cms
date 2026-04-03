@@ -4,7 +4,7 @@ namespace Khessels\Cms\Controllers;
 
 use Illuminate\Support\Facades\Session;
 
-abstract class Controller
+abstract class CMSController
 {
     public function getFilesRecursive($dir)
     {

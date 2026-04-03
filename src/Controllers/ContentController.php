@@ -12,14 +12,12 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\File;
-use Khessels\Cms\Controllers\Controller as PackageController;
 
 /* TODO-LIST
 TODO: CHANGE PAGES CACHE to RESOURCE FILE
 */
-class ContentController extends PackageController
+class ContentController extends CMSController
 {
     public $acceptedImageFileExtensions = null;
 
