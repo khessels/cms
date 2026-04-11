@@ -1,7 +1,10 @@
 <?php
 
 return [
-    'enabled'                       => env('CMS_ENABLED', (int) env('CMS_ENABLED', 1)),
+    'spatie_permission'             => env('CMS_SPATIE_PERMISSION', 'CMS'),
+    'enabled'                       => env('CMS_ENABLED', 1),
+    'route_prefix'                  => env('CMS_ROUTE_PREFIX', 'CMS'),
+
     'token'                         => env('CMS_TOKEN', ''),
     'app'                           => env('CMS_APP', ''),
     'dev'                           => env('CMS_DEV', ''),
