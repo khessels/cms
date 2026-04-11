@@ -4,7 +4,24 @@ use Illuminate\Support\Facades\Route;
 use Khessels\Cms\Controllers\ContentController;
 use Khessels\Cms\Controllers\LanguageController;
 
-Route::group(['middleware' => [ 'web', 'language' ]], function () {
+if( sizeof( explode(',', config('cms.route_middleware_encapsulation')))>0) // default web, language
+{
+    Route::group(['middleware' => explode(',', config('cms.route_middleware_encapsulation'))], function () {
+        Route::group(['prefix' => 'language'], function () {
+            Route::post('/switch', [LanguageController::class, 'update'])->name('post.language.switch');
+        });
+        if( ! empty( config('cms.spatie_permission'))){
+            Route::group(['middleware' => [ 'permission:'.strtolower( config('cms.spatie_permission'))]], function () {
+                cmsRoutes();
+            });
+        }else{
+            cmsRoutes();
+        }
+        Route::get('/'.config('cms.route_prefix').'/{page}', [ContentController::class, 'getPageFromCMS'])->name('cms.page');
+        //Route::get('/cms/image/data', [ContentController::class, 'getImageData'])->name('cms.image.data.get');
+        Route::fallback( [ContentController::class, 'getPageFromCMS'] );
+    });
+}else{
     Route::group(['prefix' => 'language'], function () {
         Route::post('/switch', [LanguageController::class, 'update'])->name('post.language.switch');
     });
@@ -18,7 +35,7 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
     Route::get('/'.config('cms.route_prefix').'/{page}', [ContentController::class, 'getPageFromCMS'])->name('cms.page');
     //Route::get('/cms/image/data', [ContentController::class, 'getImageData'])->name('cms.image.data.get');
     Route::fallback( [ContentController::class, 'getPageFromCMS'] );
-});
+}
 
 function cmsRoutes(): void
 {

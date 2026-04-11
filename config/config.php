@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'route_middleware_encapsulation' => env('CMS_ROUTE_MIDDLEWARE_ENCAPSULATION', 'web,language'),
     'spatie_permission'             => env('CMS_SPATIE_PERMISSION', 'CMS'),
     'enabled'                       => env('CMS_ENABLED', 1),
     'route_prefix'                  => env('CMS_ROUTE_PREFIX', 'CMS'),
