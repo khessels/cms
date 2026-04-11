@@ -20,7 +20,8 @@ Route::group(['middleware' => [ 'web', 'language' ]], function () {
     Route::fallback( [ContentController::class, 'getPageFromCMS'] );
 });
 
-function cmsRoutes(){
+function cmsRoutes(): void
+{
     Route::group(['prefix' => config('cms.route_prefix')], function () {
         Route::get('/', [ContentController::class, 'index'])->name('cms');
         Route::get('/content/{id}', [ContentController::class, 'content_editor'])->name('cms.content.editor');
