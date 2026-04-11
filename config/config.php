@@ -1,9 +1,10 @@
 <?php
 
 return [
+    'enabled'                       => (bool) env('CMS_ENABLED', 1),
+
     'route_middleware_encapsulation' => env('CMS_ROUTE_MIDDLEWARE_ENCAPSULATION', 'web,language'),
     'spatie_permission'             => env('CMS_SPATIE_PERMISSION', 'CMS'),
-    'enabled'                       => env('CMS_ENABLED', 1),
     'route_prefix'                  => env('CMS_ROUTE_PREFIX', 'CMS'),
 
     'token'                         => env('CMS_TOKEN', ''),
@@ -24,5 +25,5 @@ return [
     'documents_disks'               => explode(',', env('CMS_DOCUMENTS_DISKS', 'public')),
     'available_locales'             => explode(',', env('CMS_LOCALES_ENABLED', 'nl,en,es')),
 
-    'accepted_image_extensions'    => explode( ',', env('CMS_IMAGES_ACCEPTED_EXTENSIONS', 'jpeg,jpg,png,gif,webp,pdf,svg,ico')),
+    'accepted_image_extensions'    => explode( ',', env('CMS_IMAGES_ACCEPTED_EXTENSIONS', 'jpeg,jpg,png,gif,webp,svg,ico')),
 ];
