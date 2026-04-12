@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Khessels\Cms\Controllers\ContentController;
 use Khessels\Cms\Controllers\LanguageController;
+
 if(config('cms.enabled')) {
     if( config('cms.route_debug')) error_log('CMS enabled');
     if (sizeof(explode(',', config('cms.route_middleware_encapsulation'))) > 0) // default web, language
