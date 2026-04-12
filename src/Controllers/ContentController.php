@@ -297,14 +297,6 @@ public function tag_update_direct(Request $request, $app, $id)
     {
         // $pages = Cache::get('pages', []);
         $pages = unserialize( Storage::disk('resources')->get( 'pages'));
-        if(! empty( $pages[ 'message'])) {
-            if( config('cms.route_debug')) error_log('Error retrieving pages from CMS: ' . $pages[ 'message']);
-            if( config('cms.route_debug')) error_log( print_r( $pages, true));
-            if ($request->wantsJson()) {
-                return response()->json(['error' => 'Error retrieving pages from CMS: ' . $pages[ 'message']], 500);
-            }
-            abort(500, 'Error retrieving pages from CMS: ' . $pages[ 'message']);
-        }
         foreach ($pages as $oPage) {
             if (strtolower($page) === strtolower($oPage['page'])) {
                 return view("templates." . $oPage['template'])->with('page', $page);
