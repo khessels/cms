@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Khessels\Cms\Controllers\ContentController;
 use Khessels\Cms\Controllers\LanguageController;
 if(config('cms.enabled')) {
+    if( config('cms.route_debug')) error_log('CMS enabled');
     if (sizeof(explode(',', config('cms.route_middleware_encapsulation'))) > 0) // default web, language
     {
+        if( config('cms.route_debug')) error_log('CMS route_middleware_encapsulation');
         Route::group(['middleware' => explode(',', config('cms.route_middleware_encapsulation'))], function () {
             Route::group(['prefix' => 'language'], function () {
                 Route::post('/switch', [LanguageController::class, 'update'])->name('post.language.switch');
@@ -17,11 +19,9 @@ if(config('cms.enabled')) {
             } else {
                 cmsRoutes();
             }
-            Route::get('/' . config('cms.route_prefix') . '/{page}', [ContentController::class, 'getPageFromCMS'])->name('cms.page');
-            //Route::get('/cms/image/data', [ContentController::class, 'getImageData'])->name('cms.image.data.get');
-            Route::fallback([ContentController::class, 'getPageFromCMS']);
         });
     } else {
+        if( config('cms.route_debug')) error_log('CMS NO route_middleware_encapsulation');
         Route::group(['prefix' => 'language'], function () {
             Route::post('/switch', [LanguageController::class, 'update'])->name('post.language.switch');
         });
@@ -32,14 +32,19 @@ if(config('cms.enabled')) {
         } else {
             cmsRoutes();
         }
-        Route::get('/' . config('cms.route_prefix') . '/{page}', [ContentController::class, 'getPageFromCMS'])->name('cms.page');
-        //Route::get('/cms/image/data', [ContentController::class, 'getImageData'])->name('cms.image.data.get');
-        Route::fallback([ContentController::class, 'getPageFromCMS']);
+
     }
+}else{
+    if( config('cms.route_debug')) error_log('CMS disabled');
+    Route::group(['prefix' => 'language'], function () {
+        Route::post('/switch', [LanguageController::class, 'update'])->name('post.language.switch');
+    });
+    cmsRoutes();
 }
 function cmsRoutes(): void
 {
     Route::group(['prefix' => config('cms.route_prefix')], function () {
+        if( config('cms.route_debug')) error_log('Group Prefix: ' . config('cms.route_prefix'));
         Route::get('/', [ContentController::class, 'index'])->name('cms');
         Route::get('/content/{id}', [ContentController::class, 'content_editor'])->name('cms.content.editor');
 
@@ -83,5 +88,8 @@ function cmsRoutes(): void
         Route::get('/enable', [ContentController::class, 'cms_enable'])->name('cms.enable');
         Route::get('/disable', [ContentController::class, 'cms_disable'])->name('cms.disable');
         Route::post('/test/communication', [ContentController::class, 'testEndpoint'])->name('cms.endpoint.test')->middleware(['response-format:default']);
+        Route::get( '/{page}', [ContentController::class, 'getPageFromCMS'])->name('cms.page');
     });
+    //Route::get('/cms/image/data', [ContentController::class, 'getImageData'])->name('cms.image.data.get');
+    Route::fallback([ContentController::class, 'getPageFromCMS']);
 }
