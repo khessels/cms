@@ -54,26 +54,28 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card" >
-                            <div class="card-body">
-                                <h5 class="card-title" style="color: darkred">*** BE CAREFULL ***</h5>
-                                <form action="/cms/database" method="post">
-                                    @csrf
-                                    <input type="hidden" name="_method" value="delete">
-                                    <input type="hidden" name="app" value="{{ config('cms.app')}}">
-                                    <input class="btn btn-warning" type="submit" value="Delete Database">
-                                </form>
-                                <br>
-                                <form action="/cms/database/from-resources" method="post">
-                                    @csrf
-                                    <input type="hidden" name="_method" value="POST">
-                                    <input type="hidden" name="app" value="{{ config('cms.app')}}">
-                                    <input class="btn btn-warning" type="submit" value="Repopulate database from resources">
-                                </form>
+                    @haspermission('cms dangerous')
+                        <div class="col-md-4">
+                            <div class="card" >
+                                <div class="card-body">
+                                    <h5 class="card-title" style="color: darkred">*** BE CAREFULL ***</h5>
+                                    <form action="/cms/database" method="post">
+                                        @csrf
+                                        <input type="hidden" name="_method" value="delete">
+                                        <input type="hidden" name="app" value="{{ config('cms.app')}}">
+                                        <input class="btn btn-warning" type="submit" value="Delete Database">
+                                    </form>
+                                    <br>
+                                    <form action="/cms/database/from-resources" method="post">
+                                        @csrf
+                                        <input type="hidden" name="_method" value="POST">
+                                        <input type="hidden" name="app" value="{{ config('cms.app')}}">
+                                        <input class="btn btn-warning" type="submit" value="Repopulate database from resources">
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endhaspermission
                 </div>
                 <div class="row">
                     <div class="col-md-4">

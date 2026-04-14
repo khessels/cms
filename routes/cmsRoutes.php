@@ -39,8 +39,11 @@ Route::group(['prefix' => config('cms.route_prefix')], function () {
     });
 
     Route::patch('/tag/direct/{app}/{id}', [ContentController::class, 'tag_update_direct'])->name('cms.tag.update.direct');
-    Route::delete('/database', [ContentController::class, 'db_delete'])->name('cms.database.delete');
-    Route::post('/database/from-resources', [ContentController::class, 'db_populate_from_resources'])->name('cms.database.populate.from.resources');
+
+    Route::middleware('permission:cms dangerous')->group(function () {
+        Route::delete('/database', [ContentController::class, 'db_delete'])->name('cms.database.delete');
+        Route::post('/database/from-resources', [ContentController::class, 'db_populate_from_resources'])->name('cms.database.populate.from.resources');
+    });
 
     Route::get('/', [ContentController::class, 'index'])->name('cms.index');
     Route::get('/enable', [ContentController::class, 'cms_enable'])->name('cms.enable');
