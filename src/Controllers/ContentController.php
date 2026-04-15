@@ -694,12 +694,12 @@ public function tag_update_direct(Request $request, $app, $id)
     {
         try {
             $foundContent = self::_getTagAndValue($expression, $content);
-            $mimetype = ! empty($expression[ 'mimetype' ]) ? $expression[ 'mimetype' ] : 'text/html';
+            $mimetype = ! empty($expression[ 'mimetype' ]) ? $expression[ 'mimetype' ] : config('cms,.default_mimetype');
 
             if (Session::get('cms.collection.enabled')) {
                 self::addToCMSCollectionCache($expression);
             }
-            if (! $wrapped && $mimetype === 'text/html' &&  config('cms.image_management')) {
+            if (! $wrapped && $mimetype === config('cms,.default_mimetype') &&  config('cms.image_management')) {
                 return self::updateImageElement($foundContent);
             }
             return  $foundContent;

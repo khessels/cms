@@ -2,6 +2,7 @@
 
 return [
     'enabled'                       => (bool) env('CMS_ENABLED', 1),
+    'default_mimetype'              => env('CMS_DEFAULT_MIMETYPE', 'text/plain'),
 
     'route_middleware_encapsulation' => env('CMS_ROUTE_MIDDLEWARE_ENCAPSULATION', 'web,language'),
     'spatie_permission'             => env('CMS_SPATIE_PERMISSION', 'CMS'),
