@@ -1,6 +1,8 @@
 <?php
 namespace Khessels\Cms\Providers;
+
 use Khessels\Cms\Controllers\ContentController;
+
 if (! function_exists('c')) {
     /**
      * Define your package's global helper logic here.
@@ -8,6 +10,5 @@ if (! function_exists('c')) {
     function c(string $key, string $default, $langCode = null): string
     {
         return ContentController::c( $key, $default, $langCode);
-        //return "Package processed: " . $key;
     }
 }
