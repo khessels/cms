@@ -1,6 +1,7 @@
 <?php
 
-// packages/your-vendor/your-package/src/helpers.php
+namespace Khessels\Cms\Providers;
+use Khessels\Cms\Controllers\ContentController;
 
 if (! function_exists('c')) {
     /**
@@ -8,7 +9,7 @@ if (! function_exists('c')) {
      */
     function c(string $key, string $default, $langCode = null): string
     {
-        return Khessels\Cms\Controllers\ContentController::translate_helper( $key, $default, $langCode);
+        return ContentController::translate_helper( $key, $default, $langCode);
         //return "Package processed: " . $key;
     }
 }
