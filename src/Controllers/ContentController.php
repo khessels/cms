@@ -691,7 +691,7 @@ public function tag_update_direct(Request $request, $app, $id)
         }
         return false;
     }
-    public static function c(string $key, string $default, $languageCode = null)
+    public static function c(string $key, $default = null, $mimetype = 'text/plain', $languageCode = null)
     {
         $language = app::getLocale();
         if( ! empty( $languageCode)) {
