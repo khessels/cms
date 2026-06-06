@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
 use Khessels\Cms\Middleware\Language;
 use Khessels\ResponseFormat\Middleware\ResponseFormat;
+use Khessels\Cms\Controllers\ContentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Http\Kernel;
 
@@ -42,9 +43,11 @@ class ContentManagementServiceProvider extends ServiceProvider
             'throw' => false
         ];
 
-        $helpersFile = __DIR__.'/Helpers.php';
-        if ( file_exists( $helpersFile)) {
-            require_once( $helpersFile); // Or require_once
+        if (! function_exists('c')) {
+            function c(string $key, string $default, $langCode = null): string
+            {
+                return ContentController::c( $key, $default, $langCode);
+            }
         }
     }
 }
