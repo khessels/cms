@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\App;
 
 /* TODO-LIST
 TODO: CHANGE PAGES CACHE to RESOURCE FILE
@@ -690,9 +691,9 @@ public function tag_update_direct(Request $request, $app, $id)
         }
         return false;
     }
-    public static function translate_helper($key, $default, $languageCode = null)
+    public static function translate_helper(string $key, string $default, $languageCode = null)
     {
-        $language = app()->getLocale();
+        $language = app::getLocale();
         if( ! empty($languageCode)) {
             $language = $languageCode;
         }
