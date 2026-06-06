@@ -697,8 +697,8 @@ public function tag_update_direct(Request $request, $app, $id)
         if( ! empty( $languageCode)) {
             $language = $languageCode;
         }
-
-        return '1234-' . $language . '-' . $key . '-' . $default;
+        // todo: implement this function
+        return  $key;
     }
     public static function _translate($expression, $content, $wrapped = false)
     {
