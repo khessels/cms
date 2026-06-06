@@ -9,7 +9,7 @@ if (! function_exists('c')) {
      */
     function c(string $key, string $default, $langCode = null): string
     {
-        return ContentController::translate_helper( $key, $default, $langCode);
+        return ContentController::c( $key, $default, $langCode);
         //return "Package processed: " . $key;
     }
 }
