@@ -690,6 +690,15 @@ public function tag_update_direct(Request $request, $app, $id)
         }
         return false;
     }
+    public static function translate_helper($key, $default, $languageCode = null)
+    {
+        $language = app()->getLocale();
+        if( ! empty($languageCode)) {
+            $language = $languageCode;
+        }
+
+        return '1234-' . $language . '-' . $key . '-' . $default;
+    }
     public static function _translate($expression, $content, $wrapped = false)
     {
         try {
