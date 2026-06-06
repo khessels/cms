@@ -42,9 +42,9 @@ class ContentManagementServiceProvider extends ServiceProvider
             'throw' => false
         ];
 
-        $helpersFile = __DIR__.'/helpers.php';
-        if (file_exists($helpersFile)) {
-            require_once($helpersFile); // Or require_once
+        $helpersFile = __DIR__.'/Helpers.php';
+        if ( file_exists( $helpersFile)) {
+            require_once( $helpersFile); // Or require_once
         }
     }
 }

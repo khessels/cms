@@ -694,7 +694,7 @@ public function tag_update_direct(Request $request, $app, $id)
     public static function translate_helper(string $key, string $default, $languageCode = null)
     {
         $language = app::getLocale();
-        if( ! empty($languageCode)) {
+        if( ! empty( $languageCode)) {
             $language = $languageCode;
         }
 
