@@ -1,8 +1,6 @@
 <?php
-
 namespace Khessels\Cms\Providers;
 use Khessels\Cms\Controllers\ContentController;
-
 if (! function_exists('c')) {
     /**
      * Define your package's global helper logic here.
