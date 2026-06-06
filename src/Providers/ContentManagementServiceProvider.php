@@ -6,8 +6,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
 use Khessels\Cms\Middleware\Language;
 use Khessels\ResponseFormat\Middleware\ResponseFormat;
-use Khessels\Cms\Controllers\ContentController;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Http\Kernel;
 
 class ContentManagementServiceProvider extends ServiceProvider
@@ -42,12 +40,5 @@ class ContentManagementServiceProvider extends ServiceProvider
             'serve' => false,
             'throw' => false
         ];
-
-        if (! function_exists('c')) {
-            function c(string $key, string $default, $langCode = null): string
-            {
-                return ContentController::c( $key, $default, $langCode);
-            }
-        }
     }
 }
