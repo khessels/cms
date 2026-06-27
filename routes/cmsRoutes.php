@@ -1,9 +1,9 @@
 <?php
 use Khessels\Cms\Controllers\ContentController;
-
+// todo: change route names, (add route prefix) and validate routes.
 Route::group(['prefix' => config('cms.route_prefix')], function () {
     if( config('cms.route_debug')) error_log('Group Prefix: ' . config('cms.route_prefix'));
-    Route::get('/', [ContentController::class, 'index'])->name('cms');
+    Route::get('/', [ContentController::class, 'index'])->name( 'cms');
     Route::get('/content/{id}', [ContentController::class, 'content_editor'])->name('cms.content.editor');
 
     Route::group(['prefix' => 'images'], function () {

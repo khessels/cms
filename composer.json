@@ -28,7 +28,7 @@
     "minimum-stability": "dev",
         "require": {
             "php": "^8.4",
-            "illuminate/support": "^12.17",
+            "illuminate/support": "^13.0",
             "khessels/response-format": "@dev"
     },
     "prefer-stable": true,
